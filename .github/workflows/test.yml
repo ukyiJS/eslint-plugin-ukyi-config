@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build
+        run: pnpm build
+      
+      - name: Run tests
+        run: pnpm test
+      
+      - name: Test with example project
+        run: |
+          mkdir -p examples
+          cd examples
+          echo '{"name": "test-example", "version": "1.0.0", "type": "module"}' > package.json
+          pnpm add file:../
+          pnpm add eslint@^9.0.0
+          echo "import ukyiConfig from '@ukyijs/eslint-plugin-ukyi-config';" > eslint.config.js
+          echo "export default [...ukyiConfig.configs.recommended];" >> eslint.config.js
+          echo "export const greeting = 'hello world';" > test.js
+          echo "export function sayHello() {" >> test.js
+          echo "  return greeting;" >> test.js
+          echo "}" >> test.js
+          npx eslint test.js
