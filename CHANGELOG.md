@@ -1,3 +1,11 @@
+# 1.0.0 (2025-07-13)
+
+
+### Features
+
+* ESLint 플러그인 구현체 추가 ([2fd48d6](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/2fd48d68c5ec348932524f68ab145e41738be2c7))
+* 프로젝트 초기 설정 및 기본 구성 ([c83bb30](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/c83bb30115b94b4cd6ebacb08fac6ef17d413726))
+
 ## [0.0.1] - 2025-07-13
 
 ### Added
