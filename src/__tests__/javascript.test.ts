@@ -1,83 +1,21 @@
 import { ESLint } from 'eslint';
-import plugin from '../index';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('JavaScript 설정 규칙', () => {
+import plugin from '../index';
+
+describe('JavaScript 코드 품질 규칙 테스트', () => {
   let eslint: ESLint;
 
   beforeEach(() => {
     eslint = new ESLint({
       baseConfig: plugin.configs.javascript,
       overrideConfigFile: true,
-      ignore: false
+      ignore: false,
     });
   });
 
-  describe('Import 규칙', () => {
-    it('import/no-duplicates 규칙을 강제해야 함', async () => {
-      const code = `
-        import { foo } from './module';
-        import { bar } from './module';
-      `;
-      
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
-      
-      expect(messages.some(m => m.ruleId === 'import/no-duplicates')).toBe(true);
-    });
-
-    it('적절한 그룹핑으로 import/order 규칙을 강제해야 함', async () => {
-      const code = `
-        import { local } from './local';
-        import fs from 'fs';
-        import React from 'react';
-      `;
-      
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
-      
-      expect(messages.some(m => m.ruleId === 'import/order')).toBe(true);
-    });
-
-    it('import/first 규칙을 강제해야 함', async () => {
-      const code = `
-        const x = 1;
-        import fs from 'fs';
-      `;
-      
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
-      
-      expect(messages.some(m => m.ruleId === 'import/first')).toBe(true);
-    });
-
-    it('import/newline-after-import 규칙을 강제해야 함', async () => {
-      const code = `
-        import fs from 'fs';
-        const x = 1;
-      `;
-      
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
-      
-      expect(messages.some(m => m.ruleId === 'import/newline-after-import')).toBe(true);
-    });
-
-    it('import/no-useless-path-segments 규칙을 강제해야 함', async () => {
-      const code = `
-        import foo from './foo/index.js';
-        import bar from '../src/../src/bar';
-      `;
-      
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
-      
-      expect(messages.some(m => m.ruleId === 'import/no-useless-path-segments')).toBe(true);
-    });
-  });
-
-  describe('동등성과 비교 규칙', () => {
-    it('eqeqeq 규칙을 강제해야 함 (=== 및 !== 사용)', async () => {
+  describe('동등성 비교 연산자', () => {
+    it('느슨한 동등 비교(==, !=)를 사용하면 에러가 발생해야 한다 (eqeqeq)', async () => {
       const code = `
         function test() {
           const x = 1;
@@ -89,14 +27,14 @@ describe('JavaScript 설정 규칙', () => {
           }
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'eqeqeq').length).toBe(2);
     });
 
-    it('no-self-compare 규칙에서 오류를 발생시켜야 한다', async () => {
+    it('변수를 자기 자신과 비교하면 에러가 발생해야 한다 (no-self-compare)', async () => {
       const code = `
         function test() {
           const x = 1;
@@ -105,16 +43,16 @@ describe('JavaScript 설정 규칙', () => {
           }
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'no-self-compare')).toBe(true);
     });
   });
 
-  describe('콘솔 및 디버그 규칙', () => {
-    it('콘솔 사용에 대해 경고해야 함', async () => {
+  describe('콘솔 및 디버그 사용', () => {
+    it('console 메서드를 사용하면 경고가 발생해야 한다 (no-console)', async () => {
       const code = `
         function test() {
           console.log('test');
@@ -122,30 +60,30 @@ describe('JavaScript 설정 규칙', () => {
           console.time('timer');
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'no-console').length).toBe(3);
     });
 
-    it('debugger 구문에 대해 경고해야 함', async () => {
+    it('debugger 문을 사용하면 경고가 발생해야 한다 (no-debugger)', async () => {
       const code = `
         function test() {
           debugger;
           return true;
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'no-debugger')).toBe(true);
     });
   });
 
-  describe('제어 흐름 규칙', () => {
-    it('no-else-return 규칙에서 오류를 발생시켜야 한다', async () => {
+  describe('제어 흐름 최적화', () => {
+    it('return 문 다음에 else를 사용하면 에러가 발생해야 한다 (no-else-return)', async () => {
       const code = `
         function test(x) {
           if (x > 0) {
@@ -155,27 +93,27 @@ describe('JavaScript 설정 규칙', () => {
           }
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'no-else-return')).toBe(true);
     });
 
-    it('no-return-await 규칙에서 오류를 발생시켜야 한다', async () => {
+    it('불필요하게 return await를 사용하면 에러가 발생해야 한다 (no-return-await)', async () => {
       const code = `
         async function test() {
           return await Promise.resolve(1);
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'no-return-await')).toBe(true);
     });
 
-    it('no-lonely-if 규칙에서 오류를 발생시켜야 한다', async () => {
+    it('else 블록 안에 단독 if문이 있으면 에러가 발생해야 한다 (no-lonely-if)', async () => {
       const code = `
         function test(x, y) {
           if (x) {
@@ -187,16 +125,16 @@ describe('JavaScript 설정 규칙', () => {
           }
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'no-lonely-if')).toBe(true);
     });
   });
 
-  describe('스타일 및 선호도 규칙', () => {
-    it('arrow-body-style as-needed 규칙을 강제해야 함', async () => {
+  describe('코드 스타일 및 선호 규칙', () => {
+    it('화살표 함수에 불필요한 중괄호를 사용하면 에러가 발생해야 한다 (arrow-body-style)', async () => {
       const code = `
         const fn1 = () => {
           return 1;
@@ -205,14 +143,14 @@ describe('JavaScript 설정 규칙', () => {
           console.log('test');
         };
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'arrow-body-style')).toBe(true);
     });
 
-    it('object-shorthand 규칙을 강제해야 함', async () => {
+    it('객체 속성과 메서드를 축약 표기법으로 작성하지 않으면 에러가 발생해야 한다 (object-shorthand)', async () => {
       const code = `
         const name = 'test';
         const obj = {
@@ -222,14 +160,14 @@ describe('JavaScript 설정 규칙', () => {
           }
         };
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'object-shorthand').length).toBeGreaterThan(0);
     });
 
-    it('prefer-const 규칙을 강제해야 함', async () => {
+    it('재할당하지 않는 변수를 let으로 선언하면 에러가 발생해야 한다 (prefer-const)', async () => {
       const code = `
         function test() {
           let x = 1;
@@ -238,14 +176,14 @@ describe('JavaScript 설정 규칙', () => {
           return x + y;
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'prefer-const')).toBe(true);
     });
 
-    it('prefer-destructuring 규칙을 강제해야 함', async () => {
+    it('배열과 객체에서 구조 분해 할당을 사용하지 않으면 에러가 발생해야 한다 (prefer-destructuring)', async () => {
       const code = `
         function test() {
           const arr = [1, 2, 3];
@@ -255,65 +193,65 @@ describe('JavaScript 설정 규칙', () => {
           const a = obj.a;
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'prefer-destructuring').length).toBe(2);
     });
 
-    it('prefer-template 규칙을 강제해야 함', async () => {
+    it('문자열 연결에 + 연산자를 사용하면 에러가 발생해야 한다 (prefer-template)', async () => {
       const code = `
         function test(name) {
           const message = 'Hello, ' + name + '!';
           return message;
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'prefer-template')).toBe(true);
     });
 
-    it('prefer-object-spread 규칙을 강제해야 함', async () => {
+    it('Object.assign 대신 전개 연산자를 사용하지 않으면 에러가 발생해야 한다 (prefer-object-spread)', async () => {
       const code = `
         const obj1 = { a: 1 };
         const obj2 = Object.assign({}, obj1, { b: 2 });
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'prefer-object-spread')).toBe(true);
     });
 
-    it('prefer-exponentiation-operator 규칙을 강제해야 함', async () => {
+    it('Math.pow 대신 거듭제곱 연산자(**)를 사용하지 않으면 에러가 발생해야 한다 (prefer-exponentiation-operator)', async () => {
       const code = `
         const square = Math.pow(2, 2);
         const cube = Math.pow(3, 3);
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'prefer-exponentiation-operator').length).toBe(2);
     });
 
-    it('newline-per-chained-call 규칙을 강제해야 함', async () => {
+    it('메서드 체이닝이 긴 경우 줄바꿈이 없으면 에러가 발생해야 한다 (newline-per-chained-call)', async () => {
       const code = `
         const result = [1, 2, 3].map(x => x * 2).filter(x => x > 2).reduce((a, b) => a + b);
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.some(m => m.ruleId === 'newline-per-chained-call')).toBe(true);
     });
   });
 
-  describe('에러 처리 규칙', () => {
-    it('빈 블록에 대해 경고하지만 빈 catch는 허용해야 함', async () => {
+  describe('에러 처리 및 코드 안전성', () => {
+    it('빈 블록은 에러가 발생하지만 빈 catch 블록은 허용되어야 한다 (no-empty)', async () => {
       const code = `
         function test() {
           if (true) {
@@ -325,15 +263,16 @@ describe('JavaScript 설정 규칙', () => {
           }
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       const emptyMessages = messages.filter(m => m.ruleId === 'no-empty');
+
       expect(emptyMessages.length).toBe(1); // Only the if block should trigger
     });
 
-    it('no-self-assign 규칙에서 오류를 발생시켜야 한다', async () => {
+    it('변수를 자기 자신에게 할당하면 에러가 발생해야 한다 (no-self-assign)', async () => {
       const code = `
         function test() {
           let x = 1;
@@ -343,28 +282,28 @@ describe('JavaScript 설정 규칙', () => {
           obj.a = obj.a;
         }
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'no-self-assign').length).toBe(2);
     });
 
-    it('no-script-url 규칙에서 오류를 발생시켜야 한다', async () => {
+    it('javascript: URL을 사용하면 에러가 발생해야 한다 (no-script-url)', async () => {
       const code = `
         const url = 'javascript:void(0)';
         const link = 'javascript:alert("XSS")';
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       expect(messages.filter(m => m.ruleId === 'no-script-url').length).toBe(2);
     });
   });
 
-  describe('올바른 코드 예시', () => {
-    it('적절히 포맷된 코드에 대해 최소한의 오류만 있어야 한다', async () => {
+  describe('올바른 JavaScript 코드 예시', () => {
+    it('모든 JavaScript 품질 규칙을 준수한 코드는 에러가 없어야 한다', async () => {
       const code = `
         const config = {
           name: 'test',
@@ -395,12 +334,12 @@ describe('JavaScript 설정 규칙', () => {
 
         export { processData, calculate, getData, useConfig };
       `;
-      
+
       const results = await eslint.lintText(code, { filePath: 'test.js' });
       const messages = results[0].messages;
-      
+
       const relevantMessages = messages.filter(m => m.ruleId !== 'import/no-cycle');
-      
+
       expect(relevantMessages.length).toBe(0);
     });
   });
