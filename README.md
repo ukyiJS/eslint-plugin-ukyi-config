@@ -31,6 +31,7 @@ export default [
   // ...ukyiPlugin.configs.javascript,
   // ...ukyiPlugin.configs.typescript,
   // ...ukyiPlugin.configs.react,
+  // ...ukyiPlugin.configs.import,
 ];
 ```
 
@@ -69,19 +70,21 @@ React/JSX 관련 규칙들을 포함합니다.
 - Props 정렬
 - Hooks 규칙
 
+### `import`
+import/export 관련 규칙들을 포함합니다.
+- import 문 정렬 및 그룹화
+- 중복 import 방지
+- CommonJS (require) 사용 금지
+- 사용하지 않는 import 제거
+- import 문 위치 강제
+
 ### `recommended`
 일반적인 프로젝트에 권장되는 설정입니다.
-- format + javascript + typescript
+- format + javascript + typescript + import
 
 ## 주요 규칙 설명
 
 ### JavaScript 규칙
-
-#### Import 관련
-- `import/order`: import 문을 그룹별로 정렬 (builtin → external → internal → parent → sibling → index)
-- `import/no-duplicates`: 동일한 모듈에서 여러 번 import 금지
-- `import/first`: 모든 import는 파일 최상단에 위치
-- `import/newline-after-import`: import 후 빈 줄 필수
 
 #### 코드 스타일
 - `eqeqeq`: 엄격한 동등 비교 (=== 및 !==) 사용
@@ -116,6 +119,32 @@ React/JSX 관련 규칙들을 포함합니다.
 - `react/jsx-sort-props`: props 알파벳 순 정렬
 - `react-hooks/rules-of-hooks`: React Hooks 규칙 준수
 - `react-hooks/exhaustive-deps`: useEffect 의존성 배열 검증
+
+### Import 규칙
+
+#### 정렬 및 그룹화
+- `import/order`: import 문을 그룹별로 정렬
+  - builtin (Node.js 내장 모듈)
+  - external (npm 패키지)
+  - internal (프로젝트 내부 별칭)
+  - parent (상위 디렉토리)
+  - sibling (같은 디렉토리)
+  - index (현재 디렉토리의 index 파일)
+  - object (객체 import)
+  - type (타입 import)
+
+#### 품질 관리
+- `import/no-duplicates`: 동일한 모듈에서 여러 번 import 금지
+- `import/first`: 모든 import는 파일 최상단에 위치
+- `import/newline-after-import`: import 후 빈 줄 필수
+- `import/no-commonjs`: require() 사용 금지 (ES6 모듈 사용)
+- `import/no-amd`: AMD 모듈 시스템 사용 금지
+- `import/no-nodejs-modules`: Node.js 내장 모듈 직접 import 금지 (브라우저 환경)
+
+#### 의존성 관리
+- `import/no-extraneous-dependencies`: package.json에 없는 패키지 import 금지
+- `import/no-mutable-exports`: 변경 가능한 바인딩 export 금지
+- `import/no-unused-modules`: 사용하지 않는 export 감지
 
 ## 예외 처리
 
