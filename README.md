@@ -138,7 +138,7 @@ React/JSX 관련 규칙들을 포함합니다.
 - `BREAKING CHANGE:` 호환성을 깨는 변경 (메이저 버전 증가)
 - `chore:`, `docs:`, `style:`, `refactor:`, `test:` 버전 증가 없음
 
-### 자동 릴리스
+### 자동 릴리즈
 
 main 브랜치에 푸시하면 자동으로:
 1. 커밋 메시지 분석
@@ -147,7 +147,3 @@ main 브랜치에 푸시하면 자동으로:
 4. 태그 생성
 5. NPM 배포
 6. GitHub Release 생성
-
-## 라이선스
-
-MIT
