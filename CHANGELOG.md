@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.0.0...v1.1.0) (2025-07-24)
+
+
+### Features
+
+* import 설정 추가 ([0fde3a5](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/0fde3a5a7ee3ba9c66f5518431e1c6c1632884dd))
+* 프로젝트 자체 ESLint 설정 추가 ([e95f903](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/e95f90322aa3118df864093d3a94396845c56557))
+
 # 1.0.0 (2025-07-13)
 
 
