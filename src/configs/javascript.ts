@@ -1,64 +1,13 @@
-import type { Linter } from 'eslint';
 import js from '@eslint/js';
-import importPlugin from 'eslint-plugin-import';
+
+import type { Linter } from 'eslint';
 
 export const javascriptConfig: Linter.Config[] = [
   {
     name: 'ukyi-config/javascript',
     files: ['**/*.{js,mjs,cjs,jsx}'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        }
-      }
-    },
-    plugins: {
-      import: importPlugin,
-    },
     rules: {
       ...js.configs.recommended.rules,
-      ...importPlugin.flatConfigs.recommended.rules,
-
-      /* 기본 export가 있는데 named export를 default처럼 사용하는 경우 경고 */
-      'import/no-named-as-default': 'warn',
-
-      /* default export의 멤버에 named 접근하는 경우 경고 */
-      'import/no-named-as-default-member': 'warn',
-
-      /* 동일한 모듈 중복 import 금지 */
-      'import/no-duplicates': 'error',
-
-      /* import 순서 및 그룹핑 정렬 */
-      'import/order': ['error', {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-        'newlines-between': 'always',
-        alphabetize: {
-          order: 'asc',
-          caseInsensitive: true,
-        },
-      }],
-
-      /* import는 항상 파일의 맨 위에 위치 */
-      'import/first': 'error',
-
-      /* import 블록 뒤에 항상 한 줄 공백 삽입 */
-      'import/newline-after-import': ['error', {
-        count: 1,
-      }],
-
-      /* 순환 참조 최대 3단계까지 허용, 초과 시 오류 */
-      'import/no-cycle': ['error', {
-        maxDepth: 3,
-      }],
-
-      /* 불필요한 상대 경로 (./, ../) 금지 */
-      'import/no-useless-path-segments': 'error',
-
-      /* 사용되지 않는 모듈 경고 */
-      'import/no-unused-modules': 'warn',
 
       /* 항상 ===, !== 사용 (==, != 금지) */
       eqeqeq: ['warn', 'always'],
@@ -135,7 +84,7 @@ export const javascriptConfig: Linter.Config[] = [
       /* 문자열 연결 대신 템플릿 리터럴 사용 */
       'prefer-template': 'error',
     },
-  }
+  },
 ];
 
 export default javascriptConfig;

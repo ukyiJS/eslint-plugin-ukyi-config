@@ -1,9 +1,11 @@
-import type { Linter } from 'eslint';
+import { fixupPluginRules } from '@eslint/compat';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import { FixupPluginDefinition, fixupPluginRules } from '@eslint/compat';
+
+import type { FixupPluginDefinition } from '@eslint/compat';
+import type { Linter } from 'eslint';
 
 export const reactConfig: Linter.Config[] = [
   {
@@ -12,15 +14,15 @@ export const reactConfig: Linter.Config[] = [
     languageOptions: {
       parserOptions: {
         ecmaFeatures: {
-          jsx: true
-        }
-      }
+          jsx: true,
+        },
+      },
     },
     plugins: {
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'react-refresh': reactRefreshPlugin,
-      'jsx-a11y': fixupPluginRules(jsxA11yPlugin as FixupPluginDefinition) ,
+      'jsx-a11y': fixupPluginRules(jsxA11yPlugin as FixupPluginDefinition),
     },
     rules: {
       /* 리액트 훅 관련 권장 규칙 */
@@ -75,7 +77,7 @@ export const reactConfig: Linter.Config[] = [
 
       /* JSX prop 정렬: reserved → 일반 → callback → shorthand 순서 */
       'react/jsx-sort-props': ['error', {
-        noSortAlphabetically: false,
+        noSortAlphabetically: true,
         reservedFirst: true,
         shorthandLast: true,
         callbacksLast: true,
@@ -93,6 +95,47 @@ export const reactConfig: Linter.Config[] = [
         component: true,
         html: true,
       }],
+
+      /* 불필요한 익명 함수 생성 방지 */
+      'react/jsx-no-bind': ['warn', {
+        ignoreRefs: true,
+        allowArrowFunctions: true,
+        allowFunctions: false,
+        allowBind: false,
+      }],
+
+      /* React.memo 사용 시 props 비교 함수 권장 */
+      'react/prefer-stateless-function': 'error',
+
+      /* 배열 렌더링 시 key prop 검증 강화 */
+      'react/jsx-key': ['error', {
+        checkFragmentShorthand: true,
+        checkKeyMustBeforeSpread: true,
+      }],
+
+      /* displayName은 디버깅에 유용 */
+      'react/display-name': 'warn',
+
+      /* 위험한 HTML 삽입 방지 */
+      'react/no-danger': 'warn',
+      'react/no-danger-with-children': 'error',
+
+      /* target="_blank" 사용 시 보안 이슈 방지 */
+      'react/jsx-no-target-blank': ['error', {
+        allowReferrer: false,
+        enforceDynamicLinks: 'always',
+      }],
+
+      /* 중복된 props 방지 */
+      'react/jsx-no-duplicate-props': ['error', {
+        ignoreCase: true,
+      }],
+
+      /* 사용하지 않는 state 방지 */
+      'react/no-unused-state': 'warn',
+
+      /* 잘못된 생명주기 메서드 방지 */
+      'react/no-unsafe': 'error',
     },
-  }
+  },
 ];

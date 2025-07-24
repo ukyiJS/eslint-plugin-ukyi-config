@@ -1,5 +1,6 @@
-import type { Linter } from 'eslint';
 import ts from 'typescript-eslint';
+
+import type { Linter } from 'eslint';
 
 export const typescriptConfig: Linter.Config[] = [
   ...(ts.configs.recommended as Linter.Config[]),
@@ -50,8 +51,8 @@ export const typescriptConfig: Linter.Config[] = [
         },
       ],
 
-      /* method 형태 시그니처만 허용 (e.g. `fn(): void` 형태, 속성 방식 금지) */
-      '@typescript-eslint/method-signature-style': ['error', 'method'],
+      /* 속성 방식 시그니처만 허용 (e.g. `fn(): void` 형태, method 방식 금지) */
+      '@typescript-eslint/method-signature-style': ['error', 'property'],
 
       /* !! 같은 non-null 단언 조합 사용 금지 (혼동 유발) */
       '@typescript-eslint/no-confusing-non-null-assertion': 'error',
@@ -68,9 +69,64 @@ export const typescriptConfig: Linter.Config[] = [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+
+      /* switch문에서 모든 case 처리 강제 */
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+
+      /* Promise는 반드시 처리 */
+      '@typescript-eslint/no-floating-promises': 'error',
+
+      /* async 함수는 반드시 await 사용 */
+      '@typescript-eslint/require-await': 'error',
+
+      /* 불필요한 조건문 제거 */
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
+
+      /* 불필요한 타입 단언 제거 */
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+
+      /* optional chaining 사용 권장 */
+      '@typescript-eslint/prefer-optional-chain': 'error',
+
+      /* nullish coalescing 사용 권장 */
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+
+      /* 네이밍 컨벤션 */
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'variable',
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase'],
+        },
+        {
+          selector: 'parameter',
+          format: ['camelCase', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+        },
+        {
+          selector: 'typeAlias',
+          format: ['PascalCase'],
+        },
+        {
+          selector: 'enum',
+          format: ['PascalCase'],
+        },
+        {
+          selector: 'enumMember',
+          format: ['UPPER_CASE'],
+        },
+      ],
     },
   },
-
   {
     files: ['**/*.d.ts'],
     rules: {
