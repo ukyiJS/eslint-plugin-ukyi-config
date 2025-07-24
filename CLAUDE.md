@@ -46,6 +46,7 @@ The project uses semantic-release for automated versioning and publishing. Commi
   - `javascript.ts` - JavaScript quality rules (import sorting, ES6+ features)
   - `typescript.ts` - TypeScript-specific rules (type imports, any usage)
   - `react.ts` - React/JSX rules (component style, hooks, JSX formatting)
+  - `import.ts` - Import/export rules (order, duplicates, CommonJS prevention)
 
 ### Build System
 - **Vite**: Used for building the plugin with dual ESM/CJS output
@@ -56,6 +57,7 @@ The project uses semantic-release for automated versioning and publishing. Commi
 - **Vitest**: Test runner with support for globals
 - **Test Files**: Located in `src/__tests__/` directory
 - Each config has its own test file plus integration tests
+- Special test file `typescript-with-type-info.test.ts` for TypeScript rules requiring type parsing
 
 ### Configuration Hierarchy
 The plugin provides individual configs that can be used separately or combined:
@@ -63,6 +65,7 @@ The plugin provides individual configs that can be used separately or combined:
 - `javascript` - JavaScript-specific rules
 - `typescript` - TypeScript-specific rules  
 - `react` - React/JSX rules
+- `import` - Import/export management rules
 - `recommended` - Pre-combined config (format + javascript + typescript)
 
 ### Publishing
@@ -77,3 +80,9 @@ The plugin provides individual configs that can be used separately or combined:
 3. **Modular Configs**: Each config is independent and can be mixed as needed
 4. **Korean Documentation**: README is in Korean as this is a personal project for Korean development
 5. **No Linting Setup**: The project itself doesn't have ESLint configured for its own code
+
+## Test-Specific Notes
+
+- React tests require `formatConfig` to be included for JSX style rules to work properly
+- TypeScript tests with type information need proper `tsconfig.json` setup
+- Some import rules tests are limited in unit testing as they require actual module resolution

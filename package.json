@@ -4,6 +4,7 @@
   "description": "JavaScript, TypeScript, React 및 포맷팅을 위한 사전 구성된 ESLint 플러그인",
   "type": "module",
   "packageManager": "pnpm@10.13.1",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,7 +13,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -20,8 +22,13 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build && tsc --emitDeclarationOnly",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prepublishOnly": "npm run build",
     "semantic-release": "semantic-release"
   },
@@ -47,11 +54,16 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "peerDependencies": {
     "@eslint/js": ">=9.0.0",
     "@stylistic/eslint-plugin": ">=2.0.0",
     "eslint": ">=9.0.0",
-    "eslint-plugin-import": ">=2.29.0",
+    "eslint-import-resolver-typescript": ">=4.4.4",
+    "eslint-plugin-import": ">=2.32.0",
     "eslint-plugin-jsx-a11y": ">=6.8.0",
     "eslint-plugin-react": ">=7.33.0",
     "eslint-plugin-react-hooks": ">=5.0.0",
@@ -69,9 +81,11 @@
     "@types/eslint": "^9.0.0",
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.0.0",
     "eslint": "^9.0.0",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^5.0.0",
