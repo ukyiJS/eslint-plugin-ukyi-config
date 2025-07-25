@@ -35,6 +35,66 @@ export default [
 ];
 ```
 
+### TypeScript 프로젝트 설정
+
+TypeScript의 타입 체크 기능을 사용하는 규칙들을 위해 추가 설정이 필요할 수 있습니다.
+
+```javascript
+import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
+
+export default [
+  ...ukyiPlugin.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json', // 프로젝트의 tsconfig 경로 지정
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+];
+```
+
+#### ESLint 전용 tsconfig 사용 (권장)
+
+복잡한 프로젝트 구조나 빌드 설정이 있는 경우, ESLint 전용 tsconfig를 생성하는 것을 권장합니다:
+
+```json
+// tsconfig.eslint.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*",
+    "*.config.js",
+    "*.config.ts",
+    "*.config.mjs",
+    ".eslintrc.js"
+  ]
+}
+```
+
+```javascript
+// eslint.config.js
+import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
+
+export default [
+  ...ukyiPlugin.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.eslint.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+];
+```
+
+> **참고**: Vite 프로젝트는 `./tsconfig.app.json`, Monorepo는 `['./packages/*/tsconfig.json']` 등 프로젝트 구조에 맞는 경로를 사용하세요.
+
 ## 제공하는 설정
 
 ### `format`
