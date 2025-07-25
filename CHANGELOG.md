@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.1.0...v1.1.1) (2025-07-25)
+
+
+### Bug Fixes
+
+* semantic-release 인증 설정 추가 ([#2](https://github.com/ukyiJS/eslint-plugin-ukyi-config/issues/2)) ([c226aff](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/c226affb1798d7c2d2b3f07b7bac2b1b4ada24c1))
+* 빌드 설정 간소화 및 TypeScript 파서 옵션 개선 ([#1](https://github.com/ukyiJS/eslint-plugin-ukyi-config/issues/1)) ([4444ed5](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/4444ed58a4939095f570f650f91c72aef2d64b7c))
+
 # [1.1.0](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.0.0...v1.1.0) (2025-07-24)
 
 
