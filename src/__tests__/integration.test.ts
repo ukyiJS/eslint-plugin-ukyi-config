@@ -40,10 +40,10 @@ describe('ESLint 플러그인 통합 테스트', () => {
         it('files 패턴이 지원하는 파일 확장자를 포함해야 한다', () => {
           const config = plugin.configs[configName];
 
-          config.forEach((conf: any) => {
+          config.forEach((conf: Linter.Config) => {
             if (conf.files) {
               expect(Array.isArray(conf.files)).toBe(true);
-              conf.files.forEach((pattern: string) => {
+              conf.files.forEach((pattern: string[] | string) => {
                 // 패턴이 glob 형식인지 확인
                 expect(pattern).toMatch(/\.(js|mjs|cjs|jsx|ts|mts|cts|tsx)|(\{[^}]+\})/);
               });
@@ -136,7 +136,7 @@ export default Component;
         if (configName === 'javascript') return; // javascript는 플러그인이 없음
 
         const config = plugin.configs[configName as keyof typeof plugin.configs];
-        const plugins = config.flatMap((conf: any) =>
+        const plugins = config.flatMap((conf: Linter.Config) =>
           conf.plugins ? Object.keys(conf.plugins) : [],
         );
 

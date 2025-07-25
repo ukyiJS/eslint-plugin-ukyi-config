@@ -1,5 +1,4 @@
 import plugin from './dist/index.js';
-import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -16,20 +15,5 @@ export default [
   ...plugin.configs.import,
   ...plugin.configs.javascript,
   ...plugin.configs.typescript,
-  ...plugin.configs.react,
-  {
-    files: ['**/*.{ts,cts,mts,tsx}'],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: './tsconfig.eslint.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    rules: {
-      // 프로젝트 특정 오버라이드
-      '@typescript-eslint/no-explicit-any': 'off',
-      'no-console': 'off',
-    },
-  },
+  ...plugin.configs.react
 ];

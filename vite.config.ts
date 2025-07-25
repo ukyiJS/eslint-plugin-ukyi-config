@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     dts({
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/__tests__/**/*'],
       rollupTypes: true
     })
   ],
@@ -32,8 +32,9 @@ export default defineConfig({
         'fs',
         'url',
         'node:fs',
-        'node:path'
-      ]
+        'node:path',
+        'node:url'
+      ],
     },
     sourcemap: true,
     minify: false

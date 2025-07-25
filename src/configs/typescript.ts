@@ -7,6 +7,12 @@ export const typescriptConfig: Linter.Config[] = [
   {
     name: 'ukyi-config/typescript',
     files: ['**/*.{ts,cts,mts,tsx}'],
+    languageOptions: {
+      parser: ts.parser as Linter.Parser,
+      parserOptions: {
+        project: true,
+      },
+    },
     rules: {
       /* 빈 객체 타입 선언 허용 (type A = {}) */
       '@typescript-eslint/no-empty-object-type': 'off',

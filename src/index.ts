@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as url from 'url';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { formatConfig } from './configs/format';
 import { importConfig } from './configs/import';
@@ -10,7 +10,7 @@ import { typescriptConfig } from './configs/typescript';
 
 import type { Plugin } from './types';
 
-const _filename = url.fileURLToPath(import.meta.url);
+const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 const packageJson = JSON.parse(fs.readFileSync(path.join(_dirname, '..', 'package.json'), 'utf-8'));
 
