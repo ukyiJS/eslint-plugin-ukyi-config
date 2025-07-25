@@ -3,6 +3,11 @@ name: Release
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/**'
+      - '!.github/workflows/release.yml'
 
 permissions:
   contents: write
@@ -14,7 +19,16 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/main' &&
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      !contains(github.event.head_commit.message, '[skip release]') &&
+      (
+        startsWith(github.event.head_commit.message, 'feat:') ||
+        startsWith(github.event.head_commit.message, 'fix:') ||
+        contains(github.event.head_commit.message, 'BREAKING CHANGE')
+      )
     
     steps:
       - name: Checkout
