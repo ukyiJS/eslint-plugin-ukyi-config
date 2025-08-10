@@ -201,6 +201,10 @@ import/export 관련 규칙들을 포함합니다.
 - `import/no-amd`: AMD 모듈 시스템 사용 금지
 - `import/no-nodejs-modules`: Node.js 내장 모듈 직접 import 금지 (브라우저 환경)
 
+#### 경로 관리
+- `import/no-absolute-path`: 절대 경로 import 금지
+- `import/no-self-import`: 파일이 자기 자신을 import하는 것 금지
+
 #### 의존성 관리
 - `import/no-extraneous-dependencies`: package.json에 없는 패키지 import 금지
 - `import/no-mutable-exports`: 변경 가능한 바인딩 export 금지
@@ -259,3 +263,11 @@ main 브랜치에 푸시하면 자동으로 아래순서로 실행됩니다.
 - ❌ `docs: README 업데이트` → CI 실행 안함
 - ❌ `chore: 의존성 업데이트` → CI 실행 안함
 - ❌ `feat: 새 기능 추가 [skip ci]` → CI 실행 안함
+
+### 테스트 실행
+
+```bash
+pnpm test           # 테스트 실행
+pnpm test:ui        # Vitest UI로 테스트 실행
+pnpm test:coverage  # 커버리지 포함 테스트
+```
