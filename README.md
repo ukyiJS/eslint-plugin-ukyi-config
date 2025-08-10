@@ -19,40 +19,117 @@ pnpm add -D @ukyijs/eslint-plugin-ukyi-config
 
 ### ESLint 설정 파일 (eslint.config.js)
 
+#### JavaScript 프로젝트
+
 ```javascript
+import { globalIgnores, defineConfig } from 'eslint/config';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default [
-  // 권장 설정 사용
-  ...ukyiPlugin.configs.recommended,
-  
-  // 또는 개별 설정 사용
-  // ...ukyiPlugin.configs.format,
-  // ...ukyiPlugin.configs.javascript,
-  // ...ukyiPlugin.configs.typescript,
-  // ...ukyiPlugin.configs.react,
-  // ...ukyiPlugin.configs.import,
-];
+export default defineConfig(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  // JavaScript 프로젝트용 권장 설정
+  ...ukyiPlugin.configs['recommended-javascript'],
+);
+```
+
+#### React 프로젝트 (JavaScript)
+
+```javascript
+import { globalIgnores, defineConfig } from 'eslint/config';
+import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
+
+export default defineConfig(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  // React JavaScript 프로젝트용 권장 설정
+  ukyiPlugin.configs['recommended-react'],
+);
 ```
 
 ### TypeScript 프로젝트 설정
 
-TypeScript의 타입 체크 기능을 사용하는 규칙들을 위해 추가 설정이 필요할 수 있습니다.
+#### TypeScript 프로젝트
 
 ```javascript
+import { globalIgnores } from 'eslint/config';
+import * as ts from 'typescript-eslint';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default [
-  ...ukyiPlugin.configs.recommended,
+export default ts.config(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  // TypeScript 프로젝트용 권장 설정
+  ukyiPlugin.configs['recommended-typescript'],
   {
     languageOptions: {
       parserOptions: {
-        project: './tsconfig.json', // 프로젝트의 tsconfig 경로 지정
+        project: './tsconfig.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
   },
-];
+);
+```
+
+#### TypeScript + React 프로젝트
+
+```javascript
+import { globalIgnores } from 'eslint/config';
+import * as ts from 'typescript-eslint';
+import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
+
+export default ts.config(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  // TypeScript + React 프로젝트용 권장 설정 (모든 설정 포함)
+  ukyiPlugin.configs['recommended-all'],
+  {
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+);
+```
+
+#### 개별 설정 조합 (커스터마이징)
+
+```javascript
+import { globalIgnores } from 'eslint/config';
+import * as ts from 'typescript-eslint';
+import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
+
+export default ts.config(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  // 필요한 설정만 선택적으로 사용
+  ukyiPlugin.configs.format,
+  ukyiPlugin.configs.javascript,
+  ukyiPlugin.configs.typescript,
+  ukyiPlugin.configs.react,
+  ukyiPlugin.configs.import,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+);
 ```
 
 #### ESLint 전용 tsconfig 사용 (권장)
@@ -78,10 +155,16 @@ export default [
 
 ```javascript
 // eslint.config.js
+import { globalIgnores } from 'eslint/config';
+import * as ts from 'typescript-eslint';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default [
-  ...ukyiPlugin.configs.recommended,
+export default ts.config(
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+  ]),
+  ukyiPlugin.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
@@ -90,7 +173,7 @@ export default [
       },
     },
   },
-];
+);
 ```
 
 > **참고**: Vite 프로젝트는 `./tsconfig.app.json`, Monorepo는 `['./packages/*/tsconfig.json']` 등 프로젝트 구조에 맞는 경로를 사용하세요.
@@ -138,9 +221,21 @@ import/export 관련 규칙들을 포함합니다.
 - 사용하지 않는 import 제거
 - import 문 위치 강제
 
-### `recommended`
-일반적인 프로젝트에 권장되는 설정입니다.
+### `recommended-javascript`
+JavaScript 프로젝트를 위한 권장 설정입니다.
+- format + javascript + import
+
+### `recommended-typescript`
+TypeScript 프로젝트를 위한 권장 설정입니다.
 - format + javascript + typescript + import
+
+### `recommended-react`
+React JavaScript 프로젝트를 위한 권장 설정입니다.
+- format + javascript + react + import
+
+### `recommended-all`
+TypeScript + React 프로젝트를 위한 모든 설정을 포함합니다.
+- format + javascript + typescript + react + import
 
 ## 주요 규칙 설명
 
