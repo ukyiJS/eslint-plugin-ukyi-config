@@ -1,7 +1,10 @@
-import { ESLint } from 'eslint';
 import { describe, it, expect } from 'vitest';
 
 import plugin from '../index';
+import {
+  createESLint,
+  lintText,
+} from './helpers/lint';
 
 import type { Linter } from 'eslint';
 
@@ -73,34 +76,26 @@ describe('ESLint 플러그인 통합 테스트', () => {
 
     testConfigs.forEach(configName => {
       it(`${configName} 설정으로 ESLint 인스턴스를 생성하고 린트를 실행할 수 있어야 한다`, async () => {
-        const eslint = new ESLint({
-          baseConfig: plugin.configs[configName],
-          overrideConfigFile: true,
-          ignore: false,
-        });
+        const eslint = createESLint(plugin.configs[configName]);
 
         expect(eslint).toBeDefined();
 
         // 간단한 코드로 lint 가능한지 확인
         const code = 'const x = 1;';
-        const results = await eslint.lintText(code, { filePath: 'test.js' });
+        const result = await lintText(eslint, code);
 
-        expect(results).toBeDefined();
-        expect(Array.isArray(results)).toBe(true);
+        expect(result).toBeDefined();
+        expect(result.messages).toBeDefined();
       });
     });
   });
 
   describe('설정 간 호환성 테스트', () => {
     it('format과 react 설정을 함께 사용할 때 JSX 파일을 정상적으로 파싱할 수 있어야 한다', async () => {
-      const eslint = new ESLint({
-        baseConfig: [
-          ...plugin.configs.format,
-          ...plugin.configs.react,
-        ],
-        overrideConfigFile: true,
-        ignore: false,
-      });
+      const eslint = createESLint([
+        ...plugin.configs.format,
+        ...plugin.configs.react,
+      ]);
 
       const jsxCode = `
 import React from 'react';
@@ -112,13 +107,11 @@ const Component = () => {
 export default Component;
       `;
 
-      const results = await eslint.lintText(jsxCode, { filePath: 'test.jsx' });
+      const result = await lintText(eslint, jsxCode, 'test.jsx');
 
-      expect(results).toBeDefined();
+      expect(result).toBeDefined();
       // 스타일 관련 경고는 있을 수 있지만 파싱 오류는 없어야 함
-      const [result] = results;
-      const { messages } = result;
-      const fatalErrors = messages.filter(m => m.fatal);
+      const fatalErrors = result.messages.filter(m => m.fatal);
 
       expect(fatalErrors.length).toBe(0);
     });
@@ -161,17 +154,13 @@ export default Component;
         },
       ];
 
-      const eslint = new ESLint({
-        baseConfig: customConfig,
-        overrideConfigFile: true,
-        ignore: false,
-      });
+      const eslint = createESLint(customConfig);
 
       const code = 'const x = 1'; // 세미콜론 없음
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
+      const result = await lintText(eslint, code);
 
       // 세미콜론 없음이 오류가 아니어야 함
-      const semiErrors = results[0].messages.filter(m => m.ruleId === '@stylistic/semi');
+      const semiErrors = result.messages.filter(m => m.ruleId === '@stylistic/semi');
 
       expect(semiErrors.length).toBe(0);
     });

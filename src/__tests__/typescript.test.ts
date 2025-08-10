@@ -1,77 +1,29 @@
-import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { ESLint } from 'eslint';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import { formatConfig } from '../configs/format';
-import { typescriptConfig } from '../configs/typescript';
-
-const _dirname = path.dirname(fileURLToPath(import.meta.url));
+import {
+  createTempProject,
+  cleanupTempProject,
+  createTypeAwareESLint,
+  writeTestFile,
+  getTempDir,
+} from './helpers/typescript-with-type-checking-configs';
 
 describe('TypeScript 코드 품질 규칙 테스트', () => {
   let eslint: ESLint;
   let tempDir: string;
 
   beforeEach(() => {
-    // 임시 디렉토리 생성
-    tempDir = path.join(_dirname, 'temp-test-project');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-
-    // 임시 tsconfig.json 생성
-    const tsconfigPath = path.join(tempDir, 'tsconfig.json');
-
-    fs.writeFileSync(tsconfigPath, JSON.stringify({
-      compilerOptions: {
-        target: 'ES2022',
-        module: 'ESNext',
-        lib: ['ES2022'],
-        moduleResolution: 'node',
-        strict: true,
-        esModuleInterop: true,
-        skipLibCheck: true,
-        forceConsistentCasingInFileNames: true,
-      },
-      include: ['**/*.ts', '**/*.tsx'],
-    }, null, 2));
-
-    // 타입 정보를 포함한 설정으로 ESLint 인스턴스 생성
-    const configWithTypeInfo = [...formatConfig, ...typescriptConfig].map(config => {
-      if (config.name === 'ukyi-config/typescript') {
-        return {
-          ...config,
-          languageOptions: {
-            ...config.languageOptions,
-            parserOptions: {
-              project: tsconfigPath,
-              tsconfigRootDir: tempDir,
-            },
-          },
-        };
-      }
-
-      return config;
-    });
-
-    eslint = new ESLint({
-      overrideConfigFile: true,
-      baseConfig: configWithTypeInfo,
-      ignore: false,
-      cwd: tempDir,
-    });
+    // 임시 프로젝트 생성
+    tempDir = createTempProject();
+    eslint = createTypeAwareESLint(tempDir);
   });
 
   afterEach(() => {
     // 임시 디렉토리 정리
-    if (fs.existsSync(tempDir)) {
-      fs.rmSync(tempDir, {
-        recursive: true,
-        force: true,
-      });
-    }
+    cleanupTempProject();
   });
 
   describe('빈 객체 타입 사용', () => {
@@ -84,7 +36,7 @@ const obj: EmptyObject = {};
 const impl: EmptyInterface = {};
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const errors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-empty-object-type');
@@ -110,7 +62,7 @@ arrowFunction();
 new MyClass();
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const emptyFunctionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-empty-function');
@@ -125,7 +77,7 @@ function* emptyGenerator() {}
 const gen = emptyGenerator();
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const emptyFunctionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-empty-function');
@@ -142,7 +94,7 @@ let value: any = 42;
 console.log(value);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const anyErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-explicit-any');
@@ -159,7 +111,7 @@ function fn(...args: any[]) {
 fn(1, 2, 3);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const anyErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-explicit-any');
@@ -171,9 +123,7 @@ fn(1, 2, 3);
   describe('타입 임포트 일관성', () => {
     it('타입만 임포트할 때는 type import를 사용해야 한다 (@typescript-eslint/consistent-type-imports)', async () => {
       // 실제로 다른 파일이 필요하므로 간단한 타입 파일 생성
-      const typeFilePath = path.join(tempDir, 'types.ts');
-
-      fs.writeFileSync(typeFilePath, `
+      const typeFilePath = writeTestFile('types.ts', `
 export interface MyType {
   name: string;
 }
@@ -189,7 +139,7 @@ const data: MyType = { name: 'test' };
 console.log(myValue);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
 
@@ -205,7 +155,7 @@ type Numbers = Array<number>;
 const nums: Numbers = [1, 2, 3];
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const arrayErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/array-type');
@@ -220,7 +170,7 @@ type Numbers = number[];
 const nums: Numbers = [1, 2, 3];
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const arrayErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/array-type');
@@ -237,7 +187,7 @@ type Dict = { [key: string]: string };
 const dict: Dict = { a: 'b' };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const indexErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/consistent-indexed-object-style');
@@ -252,7 +202,7 @@ type Dict = Record<string, string>;
 const dict: Dict = { a: 'b' };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const indexErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/consistent-indexed-object-style');
@@ -269,7 +219,7 @@ type Person = { name: string; age: number; };
 const person: Person = { name: 'John', age: 30 };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const typeDefErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/consistent-type-definitions');
@@ -284,7 +234,7 @@ interface Person { name: string; age: number; }
 const person: Person = { name: 'John', age: 30 };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const typeDefErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/consistent-type-definitions');
@@ -299,7 +249,7 @@ type Person = { name: string; age: number; };
 export { Person };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.d.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const typeDefErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/consistent-type-definitions');
@@ -321,7 +271,7 @@ class MyClass {
 const instance = new MyClass();
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const orderingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/member-ordering');
@@ -341,7 +291,7 @@ class MyClass {
 const instance = new MyClass();
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const orderingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/member-ordering');
@@ -360,7 +310,7 @@ interface MyInterface {
 const impl: MyInterface = { method: () => {} };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const methodErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/method-signature-style');
@@ -377,7 +327,7 @@ interface MyInterface {
 const impl: MyInterface = { method: () => {} };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const methodErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/method-signature-style');
@@ -395,7 +345,7 @@ declare const b: string;
 const isEqual = a! == b;
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const confusingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-confusing-non-null-assertion');
@@ -411,7 +361,7 @@ declare const b: string;
 const isEqual = (a!) === b;
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const confusingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-confusing-non-null-assertion');
@@ -428,7 +378,7 @@ type Mixed = number | string | boolean;
 const value: Mixed = 42;
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const sortErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/sort-type-constituents');
@@ -443,7 +393,7 @@ type Mixed = boolean | number | string;
 const value: Mixed = 42;
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const sortErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/sort-type-constituents');
@@ -457,7 +407,7 @@ const value: Mixed = 42;
       const filePath = path.join(tempDir, 'test.ts');
       const code = `const unused = 42;`;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const unusedErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unused-vars');
@@ -477,7 +427,7 @@ try {
 fn(1);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const unusedErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unused-vars');
@@ -501,7 +451,7 @@ function handleStatus(status: Status) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const switchErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/switch-exhaustiveness-check');
@@ -525,7 +475,7 @@ function handleStatus(status: Status) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const switchErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/switch-exhaustiveness-check');
@@ -547,7 +497,7 @@ function handleStatus(status: Status) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const switchErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/switch-exhaustiveness-check');
@@ -569,7 +519,7 @@ function main() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const promiseErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-floating-promises');
@@ -589,7 +539,7 @@ async function main() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const promiseErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-floating-promises');
@@ -612,7 +562,7 @@ function main() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const promiseErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-floating-promises');
@@ -632,7 +582,7 @@ function main() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const promiseErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-floating-promises');
@@ -650,7 +600,7 @@ async function noAwait() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const awaitErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/require-await');
@@ -667,7 +617,7 @@ async function hasAwait() {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const awaitErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/require-await');
@@ -686,7 +636,7 @@ if (value !== null) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const conditionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unnecessary-condition');
@@ -704,7 +654,7 @@ if (value !== null) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const conditionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unnecessary-condition');
@@ -722,7 +672,7 @@ const str = value as string; // unnecessary
 console.log(str);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const assertionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unnecessary-type-assertion');
@@ -738,7 +688,7 @@ const str = value as string;
 console.log(str);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const assertionErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-unnecessary-type-assertion');
@@ -762,7 +712,7 @@ function getStreet(user: User) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const optionalErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-optional-chain');
@@ -784,7 +734,7 @@ function getStreet(user: User) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const optionalErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-optional-chain');
@@ -802,7 +752,7 @@ function getValue(value: string | null) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const nullishErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-nullish-coalescing');
@@ -818,7 +768,7 @@ function getValue(value: string | null) {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const nullishErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-nullish-coalescing');
@@ -835,7 +785,7 @@ function getValue(value: string | null) {
 console.log(bad_name_wrong);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const namingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/naming-convention');
@@ -877,7 +827,7 @@ myArrowFunction();
 fn('test', 0);
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const namingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/naming-convention');
@@ -895,7 +845,7 @@ enum status {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const namingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/naming-convention');
@@ -914,7 +864,7 @@ interface Foo {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const delimiterErrors = result.messages.filter(m => m.ruleId === '@stylistic/member-delimiter-style');
@@ -931,7 +881,7 @@ interface Foo {
 }
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const delimiterErrors = result.messages.filter(m => m.ruleId === '@stylistic/member-delimiter-style');
@@ -948,7 +898,7 @@ type Foo = {
 };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const delimiterErrors = result.messages.filter(m => m.ruleId === '@stylistic/member-delimiter-style');
@@ -965,7 +915,7 @@ type Foo = {
 };
 `;
 
-      fs.writeFileSync(filePath, code);
+      writeTestFile('test.ts', code);
 
       const [result] = await eslint.lintFiles([filePath]);
       const delimiterErrors = result.messages.filter(m => m.ruleId === '@stylistic/member-delimiter-style');
