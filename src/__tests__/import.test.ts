@@ -38,10 +38,11 @@ describe('Import 문 규칙 테스트', () => {
         console.log(myModule.namedExport);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       // 이 규칙은 실제 모듈 해석이 필요하므로 단위 테스트에서는 완전히 검증하기 어려움
-      expect(results[0].messages).toBeDefined();
+      expect(messages).toBeDefined();
     });
   });
 
@@ -54,8 +55,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(foo, bar);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-duplicates')).toBe(true);
     });
@@ -68,8 +69,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(foo, bar);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-duplicates').length).toBe(0);
     });
@@ -86,8 +87,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(Component, fs, React, helper);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/order')).toBe(true);
     });
@@ -112,8 +113,8 @@ describe('Import 문 규칙 테스트', () => {
         const x: MyType = {};
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.ts' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/order').length).toBe(0);
     });
@@ -127,8 +128,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(fs, React, helper);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/order')).toBe(true);
     });
@@ -141,8 +142,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(path, fs);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/order')).toBe(true);
     });
@@ -157,8 +158,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(x, fs);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/first')).toBe(true);
     });
@@ -172,8 +173,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(x, fs, path);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/first').length).toBe(0);
     });
@@ -187,8 +188,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(x, fs);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/newline-after-import')).toBe(true);
     });
@@ -202,8 +203,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(x, fs, path);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/newline-after-import').length).toBe(0);
     });
@@ -218,8 +219,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(x, fs);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       // exactCount: true로 인해 정확히 1줄의 공백만 허용되므로
       // 2줄 이상의 공백은 에러가 발생함
@@ -236,8 +237,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(helper, another);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-useless-path-segments').length).toBeGreaterThan(0);
     });
@@ -251,8 +252,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(helper, utils, Component);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-useless-path-segments').length).toBe(0);
     });
@@ -266,8 +267,8 @@ describe('Import 문 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-anonymous-default-export')).toBe(true);
     });
@@ -279,8 +280,8 @@ describe('Import 문 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-anonymous-default-export')).toBe(true);
     });
@@ -293,8 +294,8 @@ describe('Import 문 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-anonymous-default-export')).toBe(true);
     });
@@ -304,8 +305,8 @@ describe('Import 문 규칙 테스트', () => {
         export default [1, 2, 3];
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-anonymous-default-export')).toBe(true);
     });
@@ -318,8 +319,8 @@ describe('Import 문 규칙 테스트', () => {
         export default myFunction;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-anonymous-default-export').length).toBe(0);
     });
@@ -333,8 +334,8 @@ describe('Import 문 규칙 테스트', () => {
         export default myConfig;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-anonymous-default-export').length).toBe(0);
     });
@@ -349,8 +350,8 @@ describe('Import 문 규칙 테스트', () => {
         console.log(fs, path);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-commonjs').length).toBeGreaterThan(0);
     });
@@ -361,8 +362,8 @@ describe('Import 문 규칙 테스트', () => {
         module.exports = config;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-commonjs')).toBe(true);
     });
@@ -374,8 +375,8 @@ describe('Import 문 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'import/no-commonjs')).toBe(true);
     });
@@ -387,8 +388,8 @@ describe('Import 문 규칙 테스트', () => {
         export default { config: true };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'import/no-commonjs').length).toBe(0);
     });
@@ -436,8 +437,8 @@ describe('Import 문 규칙 테스트', () => {
         export default myComponent;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.ts' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+      const { messages } = result;
 
       // import 관련 규칙만 필터링
       const importMessages = messages.filter(m => m.ruleId?.startsWith('import/'));
@@ -455,10 +456,11 @@ describe('Import 문 규칙 테스트', () => {
         export const mySomething = something;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       // 단일 파일로는 순환 참조를 감지할 수 없으므로 에러가 없을 것
-      expect(results[0].messages).toBeDefined();
+      expect(messages).toBeDefined();
     });
   });
 
@@ -471,8 +473,8 @@ describe('Import 문 규칙 테스트', () => {
         export const anotherUnused = 42;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       // 경고가 발생할 수 있음
       const unusedMessages = messages.filter(m => m.ruleId === 'import/no-unused-modules');

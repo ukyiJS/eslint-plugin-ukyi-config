@@ -21,10 +21,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <button disabled={true}>Click</button>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-boolean-value',
         }),
@@ -51,10 +51,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div className={"test"}>{"Hello"}</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-curly-brace-presence',
         }),
@@ -67,8 +67,9 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div className="test">Hello</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const ruleIds = results[0].messages.map(m => m.ruleId);
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
+      const ruleIds = messages.map(m => m.ruleId);
 
       expect(ruleIds).not.toContain('react/jsx-curly-brace-presence');
     });
@@ -82,10 +83,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div>{ name }</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-curly-spacing',
         }),
@@ -100,10 +101,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <button onClick = {() => {}}>Click</button>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-equals-spacing',
         }),
@@ -124,10 +125,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-newline',
         }),
@@ -146,10 +147,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-no-useless-fragment',
         }),
@@ -172,10 +173,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-sort-props',
         }),
@@ -197,8 +198,9 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const ruleIds = results[0].messages.map(m => m.ruleId);
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
+      const ruleIds = messages.map(m => m.ruleId);
 
       expect(ruleIds).not.toContain('react/jsx-sort-props');
     });
@@ -211,10 +213,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <input type="text"/>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-tag-spacing',
         }),
@@ -229,10 +231,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div></div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/self-closing-comp',
         }),
@@ -249,8 +251,9 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div>{state}</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const ruleIds = results[0].messages.map(m => m.ruleId);
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
+      const ruleIds = messages.map(m => m.ruleId);
 
       expect(ruleIds).not.toContain('react-hooks/rules-of-hooks');
     });
@@ -263,10 +266,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div>Hello</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).not.toContainEqual(
+      expect(messages).not.toContainEqual(
         expect.objectContaining({
           ruleId: 'react/react-in-jsx-scope',
         }),
@@ -281,10 +284,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <button onClick={function() {}}>Click</button>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-no-bind',
           severity: 1,
@@ -298,8 +301,9 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <button onClick={() => {}}>Click</button>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const ruleIds = results[0].messages.map(m => m.ruleId);
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
+      const ruleIds = messages.map(m => m.ruleId);
 
       expect(ruleIds).not.toContain('react/jsx-no-bind');
     });
@@ -315,10 +319,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           }
         }
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/prefer-stateless-function',
         }),
@@ -359,10 +363,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-key',
         }),
@@ -377,10 +381,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div>Hello</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/display-name',
           severity: 1,
@@ -396,10 +400,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div dangerouslySetInnerHTML={{ __html: '<p>test</p>' }} />;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/no-danger',
           severity: 1,
@@ -419,10 +423,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           );
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/no-danger-with-children',
         }),
@@ -437,10 +441,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <a href="https://example.com" target="_blank">Link</a>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-no-target-blank',
         }),
@@ -455,10 +459,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <div className="test" className="duplicate">Content</div>;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/jsx-no-duplicate-props',
         }),
@@ -480,10 +484,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           }
         }
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/no-unused-state',
           severity: 1,
@@ -505,10 +509,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           }
         }
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'react/no-unsafe',
         }),
@@ -523,10 +527,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
           return <img src="image.jpg" />;
         };
       `;
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const errors = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(errors).toContainEqual(
+      expect(messages).toContainEqual(
         expect.objectContaining({
           ruleId: 'jsx-a11y/alt-text',
         }),
@@ -535,7 +539,7 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
   });
 
   describe('JSX 포맷팅 및 스타일', () => {
-    it('JSX 들여쓰기가 잘못되면 에러가 발생해야 한다 (@stylistic/jsx-indent)', async () => {
+    it('JSX 들여쓰기가 잘못되면 에러가 발생해야 한다 (@stylistic/indent)', async () => {
       const code = `
         const Component = () => {
           return (
@@ -546,10 +550,10 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
-      expect(messages.some(m => m.ruleId === '@stylistic/jsx-indent')).toBe(true);
+      expect(messages.some(m => m.ruleId === '@stylistic/indent')).toBe(true);
     });
 
     it('JSX props 들여쓰기가 잘못되면 에러가 발생해야 한다 (@stylistic/jsx-indent-props)', async () => {
@@ -565,8 +569,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-indent-props')).toBe(true);
     });
@@ -584,8 +588,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-closing-bracket-location')).toBe(true);
     });
@@ -600,8 +604,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-wrap-multilines')).toBe(true);
     });
@@ -620,8 +624,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-first-prop-new-line')).toBe(true);
     });
@@ -639,8 +643,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-max-props-per-line')).toBe(true);
     });
@@ -652,8 +656,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/jsx-quotes')).toBe(true);
     });
@@ -671,8 +675,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'react/jsx-closing-tag-location')).toBe(true);
     });
@@ -684,8 +688,8 @@ describe('React/JSX 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'react/jsx-props-no-multi-spaces')).toBe(true);
     });
@@ -700,8 +704,8 @@ export const Component = () => {
 export const someObject = { value: 42 };
 `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.tsx' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.tsx' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'react-refresh/only-export-components')).toBe(true);
     });

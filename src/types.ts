@@ -5,8 +5,7 @@ export interface PluginMeta {
   version: string;
 }
 
-export type ConfigName =
-  'format' | 'import' | 'javascript' | 'react' | 'recommended' | 'typescript';
+export type ConfigName = 'format' | 'import' | 'javascript' | 'react' | 'recommended' | 'typescript';
 
 export interface Plugin {
   meta: PluginMeta;

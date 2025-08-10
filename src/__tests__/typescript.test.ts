@@ -490,7 +490,7 @@ fn(1);
     it('유니온 타입의 모든 경우를 처리하지 않은 switch문은 에러가 발생해야 한다 (@typescript-eslint/switch-exhaustiveness-check)', async () => {
       const filePath = path.join(tempDir, 'test.ts');
       const code = `
-type Status = 'pending' | 'success' | 'error';
+type Status = 'error' | 'pending' | 'success';
 function handleStatus(status: Status) {
   switch (status) {
     case 'pending':
@@ -512,7 +512,7 @@ function handleStatus(status: Status) {
     it('모든 경우를 처리한 switch문은 허용되어야 한다 (@typescript-eslint/switch-exhaustiveness-check)', async () => {
       const filePath = path.join(tempDir, 'test.ts');
       const code = `
-type Status = 'pending' | 'success' | 'error';
+type Status = 'error' | 'pending' | 'success';
 function handleStatus(status: Status) {
   switch (status) {
     case 'pending':
@@ -536,7 +536,7 @@ function handleStatus(status: Status) {
     it('default case가 있는 switch문은 허용되어야 한다 (@typescript-eslint/switch-exhaustiveness-check)', async () => {
       const filePath = path.join(tempDir, 'test.ts');
       const code = `
-type Status = 'pending' | 'success' | 'error';
+type Status = 'error' | 'pending' | 'success';
 function handleStatus(status: Status) {
   switch (status) {
     case 'pending':
@@ -552,7 +552,7 @@ function handleStatus(status: Status) {
       const [result] = await eslint.lintFiles([filePath]);
       const switchErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/switch-exhaustiveness-check');
 
-      expect(switchErrors.length).toBe(0);
+      expect(switchErrors.length).toBe(1);
     });
   });
 

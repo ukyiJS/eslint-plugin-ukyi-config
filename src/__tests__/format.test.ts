@@ -21,8 +21,8 @@ describe('코드 포맷팅 규칙 테스트', () => {
         const fn2 = (x, y) => x + y;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/arrow-parens')).toBe(true);
     });
@@ -37,8 +37,8 @@ bar.
 baz;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/dot-location')).toBe(true);
     });
@@ -51,8 +51,8 @@ baz;
            c);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/function-call-argument-newline')).toBe(true);
     });
@@ -66,8 +66,8 @@ baz;
         c;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/indent-binary-ops')).toBe(true);
     });
@@ -82,8 +82,8 @@ baz;
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/no-extra-semi').length).toBeGreaterThan(0);
     });
@@ -96,8 +96,8 @@ baz;
         const b = x && y || z;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/no-mixed-operators').length).toBeGreaterThan(0);
     });
@@ -110,8 +110,8 @@ baz;
           console.log('test');
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/nonblock-statement-body-position')).toBe(true);
     });
@@ -123,8 +123,8 @@ baz;
         const obj = { a: 1, b: 2, c: 3, d: 4 };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/object-curly-newline')).toBe(true);
     });
@@ -139,8 +139,8 @@ baz;
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/object-property-newline')).toBe(true);
     });
@@ -152,8 +152,8 @@ baz;
         let a = 1, b = 2;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/one-var-declaration-per-line')).toBe(true);
     });
@@ -168,8 +168,8 @@ baz;
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/padding-line-between-statements')).toBe(true);
     });
@@ -180,8 +180,8 @@ baz;
         console.log(x);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/padding-line-between-statements')).toBe(true);
     });
@@ -195,8 +195,8 @@ baz;
         const y = 2;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/padding-line-between-statements').length).toBeGreaterThan(0);
     });
@@ -208,8 +208,8 @@ baz;
         const x = 1;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/padding-line-between-statements')).toBe(true);
     });
@@ -224,8 +224,8 @@ baz;
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/quote-props')).toBe(true);
     });
@@ -237,8 +237,8 @@ baz;
         const str1 = "double quotes";
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/quotes').length).toBe(1);
     });
@@ -249,8 +249,8 @@ baz;
         const str2 = \`Hello \${name}\`;
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/quotes').length).toBe(0);
     });
@@ -270,8 +270,8 @@ baz;
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/comma-dangle').length).toBeGreaterThan(0);
     });
@@ -286,8 +286,8 @@ baz;
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/key-spacing').length).toBeGreaterThan(0);
     });
@@ -301,8 +301,8 @@ baz;
         const value = obj[ key ];
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === '@stylistic/computed-property-spacing')).toBe(true);
     });
@@ -321,8 +321,8 @@ baz;
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === '@stylistic/brace-style').length).toBeGreaterThan(0);
     });
@@ -394,8 +394,8 @@ baz;
         export { processUser, calculate, fetchData, DataProcessor };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.ts' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+      const { messages } = result;
 
       // 포맷 관련 규칙만 필터링 (다른 설정의 규칙 제외)
       const formatMessages = messages.filter(m => m.ruleId?.startsWith('@stylistic/'));

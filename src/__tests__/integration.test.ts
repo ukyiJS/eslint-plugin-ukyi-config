@@ -56,7 +56,7 @@ describe('ESLint 플러그인 통합 테스트', () => {
 
   describe('recommended 설정 구성', () => {
     it('format, import, javascript, typescript 설정을 순서대로 포함해야 한다', () => {
-      const recommended = plugin.configs.recommended;
+      const { recommended } = plugin.configs;
       const expectedConfigs = [
         ...plugin.configs.format,
         ...plugin.configs.import,
@@ -116,7 +116,8 @@ export default Component;
 
       expect(results).toBeDefined();
       // 스타일 관련 경고는 있을 수 있지만 파싱 오류는 없어야 함
-      const messages = results[0].messages;
+      const [result] = results;
+      const { messages } = result;
       const fatalErrors = messages.filter(m => m.fatal);
 
       expect(fatalErrors.length).toBe(0);

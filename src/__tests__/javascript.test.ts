@@ -28,8 +28,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'eqeqeq').length).toBe(2);
     });
@@ -44,8 +44,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'no-self-compare')).toBe(true);
     });
@@ -61,8 +61,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'no-console').length).toBe(3);
     });
@@ -75,8 +75,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'no-debugger')).toBe(true);
     });
@@ -94,8 +94,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'no-else-return')).toBe(true);
     });
@@ -107,8 +107,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'no-return-await')).toBe(true);
     });
@@ -126,8 +126,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'no-lonely-if')).toBe(true);
     });
@@ -144,8 +144,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'arrow-body-style')).toBe(true);
     });
@@ -161,8 +161,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'object-shorthand').length).toBeGreaterThan(0);
     });
@@ -177,8 +177,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'prefer-const')).toBe(true);
     });
@@ -194,8 +194,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'prefer-destructuring').length).toBe(2);
     });
@@ -208,8 +208,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'prefer-template')).toBe(true);
     });
@@ -220,8 +220,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         const obj2 = Object.assign({}, obj1, { b: 2 });
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'prefer-object-spread')).toBe(true);
     });
@@ -232,8 +232,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         const cube = Math.pow(3, 3);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'prefer-exponentiation-operator').length).toBe(2);
     });
@@ -243,8 +243,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         const result = [1, 2, 3].map(x => x * 2).filter(x => x > 2).reduce((a, b) => a + b);
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.some(m => m.ruleId === 'newline-per-chained-call')).toBe(true);
     });
@@ -264,8 +264,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       const emptyMessages = messages.filter(m => m.ruleId === 'no-empty');
 
@@ -283,20 +283,20 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         }
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'no-self-assign').length).toBe(2);
     });
 
-    it('javascript: URL을 사용하면 에러가 발생해야 한다 (no-script-url)', async () => {
+    it('URL을 사용하면 에러가 발생해야 한다 (no-script-url)', async () => {
       const code = `
         const url = 'javascript:void(0)';
         const link = 'javascript:alert("XSS")';
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       expect(messages.filter(m => m.ruleId === 'no-script-url').length).toBe(2);
     });
@@ -335,8 +335,8 @@ describe('JavaScript 코드 품질 규칙 테스트', () => {
         export { processData, calculate, getData, useConfig };
       `;
 
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
-      const messages = results[0].messages;
+      const [result] = await eslint.lintText(code, { filePath: 'test.js' });
+      const { messages } = result;
 
       const relevantMessages = messages.filter(m => m.ruleId !== 'import/no-cycle');
 

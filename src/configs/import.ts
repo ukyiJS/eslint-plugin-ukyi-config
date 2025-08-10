@@ -60,6 +60,7 @@ export const importConfig: Linter.Config[] = [
       'import/newline-after-import': ['error', {
         count: 1,
         exactCount: true,
+        considerComments: true,
       }],
 
       /* 순환 참조 최대 3단계까지 허용, 초과 시 오류 */

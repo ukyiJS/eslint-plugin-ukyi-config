@@ -1,7 +1,7 @@
 import { fixupPluginRules } from '@eslint/compat';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import * as reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 
 import type { FixupPluginDefinition } from '@eslint/compat';
@@ -16,6 +16,11 @@ export const reactConfig: Linter.Config[] = [
         ecmaFeatures: {
           jsx: true,
         },
+      },
+    },
+    settings: {
+      react: {
+        version: '18.0.0', // 테스트 환경에서 경고 방지를 위한 고정 버전
       },
     },
     plugins: {
@@ -136,6 +141,17 @@ export const reactConfig: Linter.Config[] = [
 
       /* 잘못된 생명주기 메서드 방지 */
       'react/no-unsafe': 'error',
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      /* PropTypes는 TypeScript 타입으로 대체 */
+      'react/prop-types': 'off',
+      /* TypeScript가 더 정확한 타입 체크 제공 */
+      'react/require-default-props': 'off',
+      /* TypeScript 제네릭으로 충분 */
+      'react/jsx-props-no-spreading': 'off',
     },
   },
 ];
