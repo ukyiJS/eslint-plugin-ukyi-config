@@ -1,6 +1,5 @@
 import * as path from 'node:path';
 
-import { ESLint } from 'eslint';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import {
@@ -8,8 +7,9 @@ import {
   cleanupTempProject,
   createTypeAwareESLint,
   writeTestFile,
-  getTempDir,
 } from './helpers/typescript-with-type-checking-configs';
+
+import type { ESLint } from 'eslint';
 
 describe('TypeScript 코드 품질 규칙 테스트', () => {
   let eslint: ESLint;
@@ -123,7 +123,7 @@ fn(1, 2, 3);
   describe('타입 임포트 일관성', () => {
     it('타입만 임포트할 때는 type import를 사용해야 한다 (@typescript-eslint/consistent-type-imports)', async () => {
       // 실제로 다른 파일이 필요하므로 간단한 타입 파일 생성
-      const typeFilePath = writeTestFile('types.ts', `
+      writeTestFile('types.ts', `
 export interface MyType {
   name: string;
 }
@@ -851,6 +851,183 @@ enum status {
       const namingErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/naming-convention');
 
       expect(namingErrors.length).toBe(4); // interface, type, enum, enumMember 모두 에러
+    });
+  });
+
+  describe('타입 추론 가능한 곳에서 타입 명시', () => {
+    it('타입 추론이 가능한 곳에서 타입을 명시하면 에러가 발생해야 한다 (@typescript-eslint/no-inferrable-types)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+const myNumber: number = 5;
+const myString: string = "hello";
+const myBoolean: boolean = true;
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const inferrableErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-inferrable-types');
+
+      expect(inferrableErrors.length).toBe(3);
+    });
+
+    it('타입 추론을 사용하면 에러가 없어야 한다 (@typescript-eslint/no-inferrable-types)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+const myNumber = 5;
+const myString = "hello";
+const myBoolean = true;
+const myArray: string[] = []; // 빈 배열은 타입 명시 필요
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const inferrableErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-inferrable-types');
+
+      expect(inferrableErrors.length).toBe(0);
+    });
+  });
+
+  describe('return await 패턴', () => {
+    it('try-catch 블록에서 return await를 사용하지 않으면 에러가 발생해야 한다 (@typescript-eslint/return-await)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+async function fetchData() {
+  try {
+    return Promise.resolve('data');
+  } catch (error) {
+    console.error(error);
+  }
+}
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const returnAwaitErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/return-await');
+
+      expect(returnAwaitErrors.length).toBe(1);
+    });
+
+    it('try-catch 블록에서 return await를 사용하면 에러가 없어야 한다 (@typescript-eslint/return-await)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+async function fetchData() {
+  try {
+    return await Promise.resolve('data');
+  } catch (error) {
+    console.error(error);
+  }
+}
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const returnAwaitErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/return-await');
+
+      expect(returnAwaitErrors.length).toBe(0);
+    });
+
+    it('try-catch 블록 밖에서는 return await가 필수가 아니다 (@typescript-eslint/return-await)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+async function fetchData() {
+  return Promise.resolve('data');
+}
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const returnAwaitErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/return-await');
+
+      expect(returnAwaitErrors.length).toBe(0);
+    });
+  });
+
+  describe('void 반환 함수 처리', () => {
+    it('void 함수의 반환값을 사용하면 에러가 발생해야 한다 (@typescript-eslint/no-confusing-void-expression)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+function logMessage(msg: string): void {
+  console.log(msg);
+}
+
+const result = logMessage('hello');
+const wrapped = () => logMessage('world');
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const voidErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-confusing-void-expression');
+
+      expect(voidErrors.length).toBe(2);
+    });
+
+    it('void 함수를 올바르게 사용하면 에러가 없어야 한다 (@typescript-eslint/no-confusing-void-expression)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+function logMessage(msg: string): void {
+  console.log(msg);
+}
+
+logMessage('hello');
+const wrapped = () => {
+  logMessage('world');
+};
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const voidErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/no-confusing-void-expression');
+
+      expect(voidErrors.length).toBe(0);
+    });
+  });
+
+  describe('문자열 시작/끝 체크 메서드', () => {
+    it('indexOf를 사용한 시작 체크는 에러가 발생해야 한다 (@typescript-eslint/prefer-string-starts-ends-with)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+const str = 'hello world';
+if (str.indexOf('hello') === 0) {
+  console.log('starts with hello');
+}
+if (str.lastIndexOf('world') === str.length - 'world'.length) {
+  console.log('ends with world');
+}
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const stringMethodErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-string-starts-ends-with');
+
+      expect(stringMethodErrors.length).toBe(2);
+    });
+
+    it('startsWith/endsWith 사용은 허용되어야 한다 (@typescript-eslint/prefer-string-starts-ends-with)', async () => {
+      const filePath = path.join(tempDir, 'test.ts');
+      const code = `
+const str = 'hello world';
+if (str.startsWith('hello')) {
+  console.log('starts with hello');
+}
+if (str.endsWith('world')) {
+  console.log('ends with world');
+}
+`;
+
+      writeTestFile('test.ts', code);
+
+      const [result] = await eslint.lintFiles([filePath]);
+      const stringMethodErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-string-starts-ends-with');
+
+      expect(stringMethodErrors.length).toBe(0);
     });
   });
 

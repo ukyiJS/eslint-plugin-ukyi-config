@@ -3,7 +3,6 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ESLint } from 'eslint';
-import * as ts from 'typescript-eslint';
 
 import { formatConfig } from '../../configs/format';
 import { typescriptConfig } from '../../configs/typescript';

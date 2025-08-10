@@ -31,6 +31,9 @@ export const typescriptConfigForTest: Linter.Config[] = [
       '@typescript-eslint/no-unnecessary-type-assertion': 'off',
       '@typescript-eslint/prefer-optional-chain': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/return-await': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
+      '@typescript-eslint/prefer-string-starts-ends-with': 'off',
     },
   },
   {
