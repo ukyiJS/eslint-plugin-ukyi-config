@@ -20,7 +20,7 @@ export const reactConfig: Linter.Config[] = [
     },
     settings: {
       react: {
-        version: '18.0.0', // 테스트 환경에서 경고 방지를 위한 고정 버전
+        version: 'detect',
       },
     },
     plugins: {
