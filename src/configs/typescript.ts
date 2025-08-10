@@ -1,4 +1,4 @@
-import ts from 'typescript-eslint';
+import * as ts from 'typescript-eslint';
 
 import type { Linter } from 'eslint';
 
