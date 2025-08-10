@@ -128,6 +128,28 @@ export const reactConfig: Linter.Config[] = [
 
       /* 잘못된 생명주기 메서드 방지 */
       'react/no-unsafe': 'error',
+      
+      /* React 19 호환성: deprecated 기능 경고 */
+      'react/no-deprecated': 'warn',
+    },
+  },
+  {
+    name: 'ukyi-config/react-compatibility',
+    files: ['**/*.{jsx,tsx}'],
+    rules: {
+      /* 
+       * React 18/19 호환성 규칙
+       * - React 18: defaultProps 작동하지만 deprecated
+       * - React 19: 함수형 컴포넌트의 defaultProps 제거됨
+       * ES6 기본 매개변수 사용 권장
+       */
+      'react/default-props-match-prop-types': 'off',
+      
+      /* 
+       * 함수형 컴포넌트는 ES6 기본 매개변수 사용
+       * 클래스 컴포넌트는 여전히 defaultProps 지원
+       */
+      'react/no-deprecated': 'warn',
     },
   },
   {
