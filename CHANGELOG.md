@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v2.0.0...v2.0.1) (2025-08-10)
+
+
+### Bug Fixes
+
+* React 버전 자동 감지 설정 추가 ([#5](https://github.com/ukyiJS/eslint-plugin-ukyi-config/issues/5)) ([889e3e7](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/889e3e7a2c4f97221da276c510a36add698c4bf9))
+
 # [2.0.0](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.1.1...v2.0.0) (2025-08-10)
 
 
