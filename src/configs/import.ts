@@ -3,15 +3,11 @@ import importPlugin from 'eslint-plugin-import';
 import type { Linter } from 'eslint';
 
 export const importConfig: Linter.Config[] = [
+  importPlugin.flatConfigs.recommended,
   {
     name: 'ukyi-config/import',
     files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}'],
-    plugins: {
-      import: importPlugin,
-    },
     rules: {
-      ...importPlugin.flatConfigs.recommended.rules,
-
       /* 모듈 해석 규칙 비활성화 */
       'import/no-unresolved': 'off',
 

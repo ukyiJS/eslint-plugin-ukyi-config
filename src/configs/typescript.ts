@@ -3,12 +3,11 @@ import * as ts from 'typescript-eslint';
 import type { Linter } from 'eslint';
 
 export const typescriptConfig: Linter.Config[] = [
-  ...(ts.configs.recommended as Linter.Config[]),
+  ...ts.configs.recommended as Linter.Config[],
   {
     name: 'ukyi-config/typescript',
     files: ['**/*.{ts,tsx,cts,mts}'],
     languageOptions: {
-      parser: ts.parser as Linter.Parser,
       parserOptions: {
         project: true,
         tsconfigRootDir: process.cwd(),
@@ -146,11 +145,6 @@ export const typescriptConfig: Linter.Config[] = [
         {
           selector: 'enumMember',
           format: ['UPPER_CASE'],
-        },
-        {
-          selector: 'objectLiteralProperty',
-          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-          leadingUnderscore: 'allow',
         },
       ],
     },

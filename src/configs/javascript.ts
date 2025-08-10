@@ -3,12 +3,11 @@ import js from '@eslint/js';
 import type { Linter } from 'eslint';
 
 export const javascriptConfig: Linter.Config[] = [
+  js.configs.recommended,
   {
     name: 'ukyi-config/javascript',
     files: ['**/*.{js,mjs,cjs,jsx}'],
     rules: {
-      ...js.configs.recommended.rules,
-
       /* 항상 ===, !== 사용 (==, != 금지) */
       eqeqeq: ['warn', 'always'],
 

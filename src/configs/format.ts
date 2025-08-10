@@ -3,15 +3,11 @@ import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 
 export const formatConfig: Linter.Config[] = [
+  stylistic.configs.customize({ semi: true }),
   {
     name: 'ukyi-config/format',
     files: ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
-    plugins: {
-      '@stylistic': stylistic,
-    },
     rules: {
-      ...stylistic.configs.customize({ semi: true }).rules,
-
       /* 화살표 함수 매개변수 괄호는 필요한 경우만 허용 */
       '@stylistic/arrow-parens': ['error', 'as-needed'],
 
