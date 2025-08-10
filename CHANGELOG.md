@@ -1,3 +1,27 @@
+# [2.0.0](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.1.1...v2.0.0) (2025-08-10)
+
+
+### Bug Fixes
+
+* CI example 테스트에서 recommended-all 설정 사용 ([e3b7320](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/e3b73201eaf1901736cdd1b9cf859a5c923d3b34))
+* React 버전을 18.0.0으로 고정 ([8af0c29](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/8af0c295bd715a634962e01ff307101b156cdbe7))
+
+
+### Features
+
+* import 규칙 개선 및 테스트 추가 ([d349c19](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/d349c19d149d03efcb194baf897982b2a675ac1e))
+* TypeScript 린트 규칙 개선 및 테스트 추가 ([68dd90f](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/68dd90f1375aa369387a894ec24ed5ed74ea8072))
+* 권장 설정을 프로젝트 유형별로 세분화 ([2b02354](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/2b0235409b4b43b485718cdcf6d58ee7255d9470))
+* 권장 설정을 프로젝트 유형별로 세분화 ([d5a3706](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/d5a37069a0fea23006cfb4d854abdbc3c41d4212))
+* 코드 포맷팅 설정에 JSDoc 주석 추가 ([b4ec414](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/b4ec414a518a163aa7a7afdc0940a4221f408d27))
+
+
+### BREAKING CHANGES
+
+* recommended 설정이 제거되고 recommended-javascript, recommended-typescript, recommended-react, recommended-all로 세분화됨
+* recommended 설정이 제거되고 recommended-javascript, recommended-typescript, recommended-react, recommended-all로 세분화됨
+* 기존 'recommended' 설정은 'recommended-typescript'로 변경됨
+
 ## [1.1.1](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v1.1.0...v1.1.1) (2025-07-25)
 
 
