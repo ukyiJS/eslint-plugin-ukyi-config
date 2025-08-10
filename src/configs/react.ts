@@ -12,6 +12,15 @@ export const reactConfig: Linter.Config[] = [
   reactHooks.configs['recommended-latest'],
   jsxA11y.flatConfigs.recommended as Linter.Config,
   {
+    name: 'ukyi-config/react-settings',
+    settings: {
+      react: {
+        /* React 버전 자동 감지 */
+        version: 'detect',
+      },
+    },
+  },
+  {
     name: 'ukyi-config/react',
     files: ['**/*.{jsx,tsx}'],
     rules: {
