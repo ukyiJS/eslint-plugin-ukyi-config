@@ -2,6 +2,9 @@ import stylistic from '@stylistic/eslint-plugin';
 
 import type { Linter } from 'eslint';
 
+/**
+ * 코드 포맷팅 관련 ESLint 설정
+ */
 export const formatConfig: Linter.Config[] = [
   stylistic.configs.customize({ semi: true }),
   {
