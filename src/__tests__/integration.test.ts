@@ -18,13 +18,16 @@ describe('ESLint 플러그인 통합 테스트', () => {
       expect(plugin.configs).toBeDefined();
     });
 
-    it('필요한 모든 설정(format, javascript, typescript, import, react, recommended)을 내보내야 한다', () => {
+    it('필요한 모든 설정을 내보내야 한다', () => {
       expect(plugin.configs.format).toBeDefined();
       expect(plugin.configs.javascript).toBeDefined();
       expect(plugin.configs.typescript).toBeDefined();
       expect(plugin.configs.import).toBeDefined();
       expect(plugin.configs.react).toBeDefined();
-      expect(plugin.configs.recommended).toBeDefined();
+      expect(plugin.configs['recommended-javascript']).toBeDefined();
+      expect(plugin.configs['recommended-typescript']).toBeDefined();
+      expect(plugin.configs['recommended-react']).toBeDefined();
+      expect(plugin.configs['recommended-all']).toBeDefined();
     });
   });
 
@@ -57,9 +60,20 @@ describe('ESLint 플러그인 통합 테스트', () => {
     });
   });
 
-  describe('recommended 설정 구성', () => {
-    it('format, import, javascript, typescript 설정을 순서대로 포함해야 한다', () => {
-      const { recommended } = plugin.configs;
+  describe('권장 설정 구성', () => {
+    it('recommended-javascript는 format, import, javascript 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-javascript'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-typescript는 format, import, javascript, typescript 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-typescript'];
       const expectedConfigs = [
         ...plugin.configs.format,
         ...plugin.configs.import,
@@ -67,12 +81,37 @@ describe('ESLint 플러그인 통합 테스트', () => {
         ...plugin.configs.typescript,
       ];
 
-      expect(recommended.length).toBe(expectedConfigs.length);
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-react는 format, import, javascript, react 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-react'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+        ...plugin.configs.react,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-all은 모든 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-all'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+        ...plugin.configs.typescript,
+        ...plugin.configs.react,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
     });
   });
 
   describe('ESLint 인스턴스 생성 테스트', () => {
-    const testConfigs = ['format', 'javascript', 'typescript', 'react', 'recommended'] as const;
+    const testConfigs = ['format', 'javascript', 'typescript', 'react', 'recommended-typescript'] as const;
 
     testConfigs.forEach(configName => {
       it(`${configName} 설정으로 ESLint 인스턴스를 생성하고 린트를 실행할 수 있어야 한다`, async () => {
