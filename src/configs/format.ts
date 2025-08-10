@@ -3,15 +3,11 @@ import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 
 export const formatConfig: Linter.Config[] = [
+  stylistic.configs.customize({ semi: true }),
   {
     name: 'ukyi-config/format',
     files: ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
-    plugins: {
-      '@stylistic': stylistic,
-    },
     rules: {
-      ...stylistic.configs.customize({ semi: true }).rules,
-
       /* 화살표 함수 매개변수 괄호는 필요한 경우만 허용 */
       '@stylistic/arrow-parens': ['error', 'as-needed'],
 
@@ -152,10 +148,10 @@ export const formatConfig: Linter.Config[] = [
       /* 객체 속성의 따옴표는 필요한 경우만 사용 */
       '@stylistic/quote-props': ['error', 'as-needed'],
 
-      /* 문자열은 항상 작은 따옴표(single quote) 사용, 템플릿 리터럴은 금지 */
+      /* 문자열은 항상 작은 따옴표(single quote) 사용, 템플릿 리터럴은 허용 */
       '@stylistic/quotes': ['error', 'single', {
-        allowTemplateLiterals: true, // 필요시 백틱 허용
         avoidEscape: true, // 이스케이프를 피하기 위한 다른 따옴표 허용
+        allowTemplateLiterals: 'always', // 템플릿 리터럴 허용
       }],
 
       /* 객체/배열 등 멀티라인 구조에 trailing comma 사용 */
@@ -179,9 +175,6 @@ export const formatConfig: Linter.Config[] = [
 
       /* 코드 블록 스타일은 1tbs(one true brace style) 적용 */
       '@stylistic/brace-style': ['error', '1tbs'],
-
-      /* JSX 들여쓰기 - 2칸 */
-      '@stylistic/jsx-indent': ['error', 2],
 
       /* JSX 속성 들여쓰기 - 2칸 */
       '@stylistic/jsx-indent-props': ['error', 2],
@@ -223,7 +216,6 @@ export const formatConfig: Linter.Config[] = [
         when: 'never',
         children: true,
       }],
-
     },
   },
 ];

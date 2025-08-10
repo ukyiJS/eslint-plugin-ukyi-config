@@ -1,16 +1,16 @@
-import ts from 'typescript-eslint';
+import * as ts from 'typescript-eslint';
 
 import type { Linter } from 'eslint';
 
 export const typescriptConfig: Linter.Config[] = [
-  ...(ts.configs.recommended as Linter.Config[]),
+  ...ts.configs.recommended as Linter.Config[],
   {
     name: 'ukyi-config/typescript',
-    files: ['**/*.{ts,cts,mts,tsx}'],
+    files: ['**/*.{ts,tsx,cts,mts}'],
     languageOptions: {
-      parser: ts.parser as Linter.Parser,
       parserOptions: {
         project: true,
+        tsconfigRootDir: process.cwd(),
       },
     },
     rules: {
@@ -97,6 +97,18 @@ export const typescriptConfig: Linter.Config[] = [
       /* nullish coalescing 사용 권장 */
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
 
+      /* 타입 추론이 가능한 곳에서 타입 명시 금지 */
+      '@typescript-eslint/no-inferrable-types': 'error',
+
+      /* return await 패턴 일관성 (try-catch 내에서는 필수) */
+      '@typescript-eslint/return-await': ['error', 'in-try-catch'],
+
+      /* void 반환 함수에서 값 반환 금지 */
+      '@typescript-eslint/no-confusing-void-expression': 'error',
+
+      /* string.startsWith/endsWith 사용 권장 */
+      '@typescript-eslint/prefer-string-starts-ends-with': 'error',
+
       /* 네이밍 컨벤션 */
       '@typescript-eslint/naming-convention': [
         'error',
@@ -113,6 +125,10 @@ export const typescriptConfig: Linter.Config[] = [
           selector: 'parameter',
           format: ['camelCase', 'PascalCase'],
           leadingUnderscore: 'allow',
+        },
+        {
+          selector: 'typeLike',
+          format: ['PascalCase'],
         },
         {
           selector: 'interface',

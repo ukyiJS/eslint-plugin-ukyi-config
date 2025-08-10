@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+
+import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -7,15 +8,15 @@ export default defineConfig({
     dts({
       include: ['src/**/*.ts'],
       exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/__tests__/**/*'],
-      rollupTypes: true
-    })
+      rollupTypes: true,
+    }),
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'EslintPluginUkyiConfig',
       formats: ['es', 'cjs'],
-      fileName: (format) => format === 'es' ? 'index.js' : 'index.cjs'
+      fileName: format => format === 'es' ? 'index.js' : 'index.cjs',
     },
     rollupOptions: {
       external: [
@@ -33,10 +34,10 @@ export default defineConfig({
         'url',
         'node:fs',
         'node:path',
-        'node:url'
+        'node:url',
       ],
     },
     sourcemap: true,
-    minify: false
-  }
+    minify: false,
+  },
 });

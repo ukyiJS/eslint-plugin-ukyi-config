@@ -1,7 +1,10 @@
-import { ESLint } from 'eslint';
 import { describe, it, expect } from 'vitest';
 
 import plugin from '../index';
+import {
+  createESLint,
+  lintText,
+} from './helpers/lint';
 
 import type { Linter } from 'eslint';
 
@@ -15,13 +18,16 @@ describe('ESLint 플러그인 통합 테스트', () => {
       expect(plugin.configs).toBeDefined();
     });
 
-    it('필요한 모든 설정(format, javascript, typescript, import, react, recommended)을 내보내야 한다', () => {
+    it('필요한 모든 설정을 내보내야 한다', () => {
       expect(plugin.configs.format).toBeDefined();
       expect(plugin.configs.javascript).toBeDefined();
       expect(plugin.configs.typescript).toBeDefined();
       expect(plugin.configs.import).toBeDefined();
       expect(plugin.configs.react).toBeDefined();
-      expect(plugin.configs.recommended).toBeDefined();
+      expect(plugin.configs['recommended-javascript']).toBeDefined();
+      expect(plugin.configs['recommended-typescript']).toBeDefined();
+      expect(plugin.configs['recommended-react']).toBeDefined();
+      expect(plugin.configs['recommended-all']).toBeDefined();
     });
   });
 
@@ -54,9 +60,20 @@ describe('ESLint 플러그인 통합 테스트', () => {
     });
   });
 
-  describe('recommended 설정 구성', () => {
-    it('format, import, javascript, typescript 설정을 순서대로 포함해야 한다', () => {
-      const recommended = plugin.configs.recommended;
+  describe('권장 설정 구성', () => {
+    it('recommended-javascript는 format, import, javascript 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-javascript'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-typescript는 format, import, javascript, typescript 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-typescript'];
       const expectedConfigs = [
         ...plugin.configs.format,
         ...plugin.configs.import,
@@ -64,43 +81,60 @@ describe('ESLint 플러그인 통합 테스트', () => {
         ...plugin.configs.typescript,
       ];
 
-      expect(recommended.length).toBe(expectedConfigs.length);
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-react는 format, import, javascript, react 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-react'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+        ...plugin.configs.react,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
+    });
+
+    it('recommended-all은 모든 설정을 포함해야 한다', () => {
+      const config = plugin.configs['recommended-all'];
+      const expectedConfigs = [
+        ...plugin.configs.format,
+        ...plugin.configs.import,
+        ...plugin.configs.javascript,
+        ...plugin.configs.typescript,
+        ...plugin.configs.react,
+      ];
+
+      expect(config.length).toBe(expectedConfigs.length);
     });
   });
 
   describe('ESLint 인스턴스 생성 테스트', () => {
-    const testConfigs = ['format', 'javascript', 'typescript', 'react', 'recommended'] as const;
+    const testConfigs = ['format', 'javascript', 'typescript', 'react', 'recommended-typescript'] as const;
 
     testConfigs.forEach(configName => {
       it(`${configName} 설정으로 ESLint 인스턴스를 생성하고 린트를 실행할 수 있어야 한다`, async () => {
-        const eslint = new ESLint({
-          baseConfig: plugin.configs[configName],
-          overrideConfigFile: true,
-          ignore: false,
-        });
+        const eslint = createESLint(plugin.configs[configName]);
 
         expect(eslint).toBeDefined();
 
         // 간단한 코드로 lint 가능한지 확인
         const code = 'const x = 1;';
-        const results = await eslint.lintText(code, { filePath: 'test.js' });
+        const result = await lintText(eslint, code);
 
-        expect(results).toBeDefined();
-        expect(Array.isArray(results)).toBe(true);
+        expect(result).toBeDefined();
+        expect(result.messages).toBeDefined();
       });
     });
   });
 
   describe('설정 간 호환성 테스트', () => {
     it('format과 react 설정을 함께 사용할 때 JSX 파일을 정상적으로 파싱할 수 있어야 한다', async () => {
-      const eslint = new ESLint({
-        baseConfig: [
-          ...plugin.configs.format,
-          ...plugin.configs.react,
-        ],
-        overrideConfigFile: true,
-        ignore: false,
-      });
+      const eslint = createESLint([
+        ...plugin.configs.format,
+        ...plugin.configs.react,
+      ]);
 
       const jsxCode = `
 import React from 'react';
@@ -112,12 +146,11 @@ const Component = () => {
 export default Component;
       `;
 
-      const results = await eslint.lintText(jsxCode, { filePath: 'test.jsx' });
+      const result = await lintText(eslint, jsxCode, 'test.jsx');
 
-      expect(results).toBeDefined();
+      expect(result).toBeDefined();
       // 스타일 관련 경고는 있을 수 있지만 파싱 오류는 없어야 함
-      const messages = results[0].messages;
-      const fatalErrors = messages.filter(m => m.fatal);
+      const fatalErrors = result.messages.filter(m => m.fatal);
 
       expect(fatalErrors.length).toBe(0);
     });
@@ -160,17 +193,13 @@ export default Component;
         },
       ];
 
-      const eslint = new ESLint({
-        baseConfig: customConfig,
-        overrideConfigFile: true,
-        ignore: false,
-      });
+      const eslint = createESLint(customConfig);
 
       const code = 'const x = 1'; // 세미콜론 없음
-      const results = await eslint.lintText(code, { filePath: 'test.js' });
+      const result = await lintText(eslint, code);
 
       // 세미콜론 없음이 오류가 아니어야 함
-      const semiErrors = results[0].messages.filter(m => m.ruleId === '@stylistic/semi');
+      const semiErrors = result.messages.filter(m => m.ruleId === '@stylistic/semi');
 
       expect(semiErrors.length).toBe(0);
     });

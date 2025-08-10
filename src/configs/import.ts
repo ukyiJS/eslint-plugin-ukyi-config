@@ -3,15 +3,11 @@ import importPlugin from 'eslint-plugin-import';
 import type { Linter } from 'eslint';
 
 export const importConfig: Linter.Config[] = [
+  importPlugin.flatConfigs.recommended,
   {
     name: 'ukyi-config/import',
     files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}'],
-    plugins: {
-      import: importPlugin,
-    },
     rules: {
-      ...importPlugin.flatConfigs.recommended.rules,
-
       /* 모듈 해석 규칙 비활성화 */
       'import/no-unresolved': 'off',
 
@@ -60,6 +56,7 @@ export const importConfig: Linter.Config[] = [
       'import/newline-after-import': ['error', {
         count: 1,
         exactCount: true,
+        considerComments: true,
       }],
 
       /* 순환 참조 최대 3단계까지 허용, 초과 시 오류 */
@@ -85,11 +82,25 @@ export const importConfig: Linter.Config[] = [
 
       /* CommonJS require() 사용 금지 (ES 모듈 환경) */
       'import/no-commonjs': 'error',
+
+      /* 절대 경로 import 금지 */
+      'import/no-absolute-path': 'error',
+
+      /* 자기 자신을 import하는 것 금지 */
+      'import/no-self-import': 'error',
     },
     settings: {
       'import/resolver': {
-        typescript: true,
-        node: true,
+        typescript: {
+          alwaysTryTypes: true,
+        },
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'],
+        },
+      },
+      'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'],
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx', '.mts', '.cts'],
       },
     },
   },

@@ -45,7 +45,7 @@ jobs:
           pnpm add file:../
           pnpm add eslint@^9.0.0
           echo "import ukyiConfig from '@ukyijs/eslint-plugin-ukyi-config';" > eslint.config.js
-          echo "export default [...ukyiConfig.configs.recommended];" >> eslint.config.js
+          echo "export default [...ukyiConfig.configs['recommended-all']];" >> eslint.config.js
           echo "export const greeting = 'hello world';" > test.js
           echo "export function sayHello() {" >> test.js
           echo "  return greeting;" >> test.js

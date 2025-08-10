@@ -17,6 +17,6 @@
     "isolatedModules": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./vite.config.ts", "./vitest.config.ts", "./eslint.config.js"],
   "exclude": ["node_modules", "dist"]
 }

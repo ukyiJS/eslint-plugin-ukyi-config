@@ -35,12 +35,36 @@ const plugin: Plugin = {
     /** React/JSX 관련 규칙들 (컴포넌트, Hooks, JSX 스타일) */
     react: reactConfig,
 
+    /** 권장 설정 (포맷팅 + Import + JavaScript) */
+    'recommended-javascript': [
+      ...formatConfig,
+      ...importConfig,
+      ...javascriptConfig,
+    ],
+
     /** 권장 설정 (포맷팅 + Import + JavaScript + TypeScript) */
-    recommended: [
+    'recommended-typescript': [
       ...formatConfig,
       ...importConfig,
       ...javascriptConfig,
       ...typescriptConfig,
+    ],
+
+    /** 권장 설정 (포맷팅 + Import + JavaScript + React) */
+    'recommended-react': [
+      ...formatConfig,
+      ...importConfig,
+      ...javascriptConfig,
+      ...reactConfig,
+    ],
+
+    /** 권장 설정 (포맷팅 + Import + JavaScript + TypeScript + React) */
+    'recommended-all': [
+      ...formatConfig,
+      ...importConfig,
+      ...javascriptConfig,
+      ...typescriptConfig,
+      ...reactConfig,
     ],
   },
 };

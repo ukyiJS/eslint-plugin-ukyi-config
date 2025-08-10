@@ -5,7 +5,7 @@
   },
   "include": [
     "./src/**/*",
-    "./eslint.config.mjs",
+    "./eslint.config.js",
     "./vite.config.ts",
     "./vitest.config.ts"
   ],
