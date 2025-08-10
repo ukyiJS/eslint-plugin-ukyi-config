@@ -56,11 +56,10 @@ export default defineConfig(
 #### TypeScript 프로젝트
 
 ```javascript
-import { globalIgnores } from 'eslint/config';
-import * as ts from 'typescript-eslint';
+import { globalIgnores, defineConfig } from 'eslint/config';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default ts.config(
+export default defineConfig(
   globalIgnores([
     'dist/**',
     'node_modules/**',
@@ -81,11 +80,10 @@ export default ts.config(
 #### TypeScript + React 프로젝트
 
 ```javascript
-import { globalIgnores } from 'eslint/config';
-import * as ts from 'typescript-eslint';
+import { globalIgnores, defineConfig } from 'eslint/config';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default ts.config(
+export default defineConfig(
   globalIgnores([
     'dist/**',
     'node_modules/**',
@@ -106,11 +104,10 @@ export default ts.config(
 #### 개별 설정 조합 (커스터마이징)
 
 ```javascript
-import { globalIgnores } from 'eslint/config';
-import * as ts from 'typescript-eslint';
+import { globalIgnores, defineConfig } from 'eslint/config';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default ts.config(
+export default defineConfig(
   globalIgnores([
     'dist/**',
     'node_modules/**',
@@ -155,11 +152,10 @@ export default ts.config(
 
 ```javascript
 // eslint.config.js
-import { globalIgnores } from 'eslint/config';
-import * as ts from 'typescript-eslint';
+import { globalIgnores, defineConfig } from 'eslint/config';
 import ukyiPlugin from '@ukyijs/eslint-plugin-ukyi-config';
 
-export default ts.config(
+export default defineConfig(
   globalIgnores([
     'dist/**',
     'node_modules/**',
