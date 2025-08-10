@@ -31,7 +31,7 @@ export default defineConfig(
     'node_modules/**',
   ]),
   // JavaScript 프로젝트용 권장 설정
-  ...ukyiPlugin.configs['recommended-javascript'],
+  ukyiPlugin.configs['recommended-javascript'],
 );
 ```
 
