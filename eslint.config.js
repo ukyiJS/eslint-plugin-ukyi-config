@@ -1,10 +1,10 @@
 import { globalIgnores } from 'eslint/config';
 import globals from 'globals';
-import typescript from 'typescript-eslint';
+import ts from 'typescript-eslint';
 
 import plugin from './dist/index.js';
 
-export default typescript.config([
+export default ts.config(
   globalIgnores([
     'dist/**',
     'coverage/**',
@@ -21,4 +21,4 @@ export default typescript.config([
       globals: globals.browser,
     },
   },
-]);
+);
