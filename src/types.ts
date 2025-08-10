@@ -20,7 +20,13 @@ export interface Plugin {
     typescript: Linter.Config[];
     /** React/JSX 관련 규칙들 (컴포넌트, Hooks, JSX 스타일) */
     react: Linter.Config[];
+    /** 권장 설정 (포맷팅 + Import + JavaScript) */
+    'recommended-javascript': Linter.Config[];
     /** 권장 설정 (포맷팅 + Import + JavaScript + TypeScript) */
-    recommended: Linter.Config[];
+    'recommended-typescript': Linter.Config[];
+    /** 권장 설정 (포맷팅 + Import + JavaScript + React) */
+    'recommended-react': Linter.Config[];
+    /** 권장 설정 (포맷팅 + Import + JavaScript + TypeScript + React) */
+    'recommended-all': Linter.Config[];
   };
 }
