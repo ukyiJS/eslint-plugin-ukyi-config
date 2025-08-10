@@ -86,11 +86,25 @@ export const importConfig: Linter.Config[] = [
 
       /* CommonJS require() 사용 금지 (ES 모듈 환경) */
       'import/no-commonjs': 'error',
+
+      /* 절대 경로 import 금지 */
+      'import/no-absolute-path': 'error',
+
+      /* 자기 자신을 import하는 것 금지 */
+      'import/no-self-import': 'error',
     },
     settings: {
       'import/resolver': {
-        typescript: true,
-        node: true,
+        typescript: {
+          alwaysTryTypes: true,
+        },
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'],
+        },
+      },
+      'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'],
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx', '.mts', '.cts'],
       },
     },
   },
