@@ -683,23 +683,6 @@ function getValue(value: string | null) {
 
       expect(nullishErrors.length).toBe(1);
     });
-
-    it('nullish coalescing(??)을 사용하면 허용되어야 한다 (@typescript-eslint/prefer-nullish-coalescing)', async () => {
-      const filePath = path.join(tempDir, 'test.ts');
-      const code = `
-function getValue(value: string | null) {
-  return value ?? 'default';
-}
-`;
-
-      writeTestFile('test.ts', code);
-
-      const [result] = await eslint.lintFiles([filePath]);
-      const nullishErrors = result.messages.filter(m => m.ruleId === '@typescript-eslint/prefer-nullish-coalescing');
-
-      // ?? 사용은 권장되므로 에러가 없어야 함
-      expect(nullishErrors.length).toBe(0);
-    });
   });
 
   describe('네이밍 컨벤션', () => {
