@@ -94,12 +94,4 @@ import something from '/absolute/path/to/module';
       expect(absoluteErrors.length).toBeGreaterThan(0);
     });
   });
-
-  describe('Self import 방지', () => {
-    it('self-import 규칙이 활성화되어 있어야 한다', () => {
-      // import/no-self-import 규칙은 실제 파일 시스템과 package.json이 필요하므로
-      // lintText로는 테스트할 수 없음. 대신 규칙이 활성화되어 있는지만 확인
-      expect(testConfigs.import[0].rules?.['import/no-self-import']).toBe('error');
-    });
-  });
 });

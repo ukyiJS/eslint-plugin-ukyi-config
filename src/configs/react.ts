@@ -1,42 +1,20 @@
-import { fixupPluginRules } from '@eslint/compat';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import reactPlugin from 'eslint-plugin-react';
-import * as reactHooksPlugin from 'eslint-plugin-react-hooks';
-import reactRefreshPlugin from 'eslint-plugin-react-refresh';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import react from 'eslint-plugin-react';
+import * as reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 
-import type { FixupPluginDefinition } from '@eslint/compat';
 import type { Linter } from 'eslint';
 
 export const reactConfig: Linter.Config[] = [
+  react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
+  reactRefresh.configs.recommended,
+  reactHooks.configs['recommended-latest'],
+  jsxA11y.flatConfigs.recommended as Linter.Config,
   {
     name: 'ukyi-config/react',
     files: ['**/*.{jsx,tsx}'],
-    languageOptions: {
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    plugins: {
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      'react-refresh': reactRefreshPlugin,
-      'jsx-a11y': fixupPluginRules(jsxA11yPlugin as FixupPluginDefinition),
-    },
     rules: {
-      /* 리액트 훅 관련 권장 규칙 */
-      ...reactPlugin.configs.recommended.rules,
-      ...reactPlugin.configs['jsx-runtime'].rules,
-      ...reactHooksPlugin.configs.recommended.rules,
-      ...reactRefreshPlugin.configs.recommended.rules,
-      ...jsxA11yPlugin.configs.recommended.rules,
-
       /* react-refresh: HMR 안정성을 위해 컴포넌트만 export 하도록 제한 */
       'react-refresh/only-export-components': ['warn', {
         allowConstantExport: true,
