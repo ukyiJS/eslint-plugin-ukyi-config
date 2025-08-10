@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v2.0.1...v2.1.0) (2025-08-10)
+
+
+### Features
+
+* React 18과 19 호환성 개선 ([#6](https://github.com/ukyiJS/eslint-plugin-ukyi-config/issues/6)) ([db1bf66](https://github.com/ukyiJS/eslint-plugin-ukyi-config/commit/db1bf66987f2a15b56f384c1590c80be52a84266))
+
 ## [2.0.1](https://github.com/ukyiJS/eslint-plugin-ukyi-config/compare/v2.0.0...v2.0.1) (2025-08-10)
 
 
